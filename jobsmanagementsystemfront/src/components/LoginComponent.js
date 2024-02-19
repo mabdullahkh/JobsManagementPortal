@@ -4,6 +4,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import './LoginComponent.css'; // Import CSS file for animations
+import API_BASE_URL from '../config/config';
 
 
 
@@ -20,7 +21,7 @@ function LoginComponent() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/login', {
+      const response = await fetch(`${API_BASE_URL}login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
