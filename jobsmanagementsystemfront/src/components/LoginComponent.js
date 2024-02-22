@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from "react";
 import {
   TextField,
@@ -12,6 +13,15 @@ import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import "./LoginComponent.css"; // Import CSS file for animations
 
+=======
+import React, { useState } from 'react';
+import { TextField, Button, Typography, Box, CircularProgress, IconButton } from '@mui/material';
+import LockIcon from '@mui/icons-material/Lock';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+import './LoginComponent.css'; // Import CSS file for animations
+import API_BASE_URL from '../config/config';
+>>>>>>> 4411fc8cf4eeee4da153700f6f9e977aca5388dd
 function LoginComponent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,15 +35,24 @@ function LoginComponent() {
     setLoading(true);
 
     try {
+<<<<<<< HEAD
       const response = await fetch("http://127.0.0.1:8000/api/login", {
         method: "POST",
+=======
+      const response = await fetch(`${API_BASE_URL}login`, {
+        method: 'POST',
+>>>>>>> 4411fc8cf4eeee4da153700f6f9e977aca5388dd
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           user_email: email,
           user_password: password,
+<<<<<<< HEAD
           user_role: "admin", // Adjust this as per your API requirement
+=======
+         // user_role: 'admin', // Adjust this as per your API requirement
+>>>>>>> 4411fc8cf4eeee4da153700f6f9e977aca5388dd
         }),
       });
 
