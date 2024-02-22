@@ -5,9 +5,6 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import './LoginComponent.css'; // Import CSS file for animations
 import API_BASE_URL from '../config/config';
-
-
-
 function LoginComponent() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -29,7 +26,7 @@ function LoginComponent() {
         body: JSON.stringify({
           user_email: email,
           user_password: password,
-          user_role: 'admin', // Adjust this as per your API requirement
+         // user_role: 'admin', // Adjust this as per your API requirement
         }),
       });
 
