@@ -9,6 +9,9 @@ const InputData = React.lazy(() =>
   import("./views/theme/typography/InputData")
 );
 const ViewJobs = React.lazy(() => import("./views/theme/typography/ViewJobs"));
+const InsertEngineer = React.lazy(() =>
+  import("./views/theme/typography/InsertEngineer")
+);
 
 // Base
 const Accordion = React.lazy(() => import("./views/base/accordion/Accordion"));
@@ -88,6 +91,11 @@ const routes = [
   { path: "/theme/typography", name: "Typography", element: Typography },
   { path: "/theme/inputdata", name: "InputData", element: InputData },
   { path: "/theme/viewjobs", name: "ViewJobs", element: ViewJobs },
+  {
+    path: "/theme/insertengineer",
+    name: "InsertEngineer",
+    element: InsertEngineer,
+  },
   { path: "/base", name: "Base", element: Cards, exact: true },
   { path: "/base/accordion", name: "Accordion", element: Accordion },
   { path: "/base/breadcrumbs", name: "Breadcrumbs", element: Breadcrumbs },

@@ -55,6 +55,12 @@ const _nav = [
     icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
   },
   {
+    component: CNavItem,
+    name: "Insert Engineer",
+    to: "/theme/insertengineer",
+    icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
+  },
+  {
     component: CNavTitle,
     name: "Components",
   },
