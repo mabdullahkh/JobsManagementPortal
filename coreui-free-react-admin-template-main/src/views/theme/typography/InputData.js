@@ -40,11 +40,20 @@ const InputData = () => {
                 />
               </div>
               <div className="mb-3">
-                <CFormLabel htmlFor="jobDate">Job Date</CFormLabel>
+                <CFormLabel htmlFor="jobDate">Job Starting Date</CFormLabel>
                 <CFormInput
                   type="date"
                   id="jobDate"
                   placeholder="Select job date"
+                />
+              </div>
+
+              <div className="mb-3">
+                <CFormLabel htmlFor="jobDate">Expected Ending Date</CFormLabel>
+                <CFormInput
+                  type="date"
+                  id="jobDate"
+                  placeholder="Expected Ending Date"
                 />
               </div>
               <div className="mb-3">
@@ -65,6 +74,15 @@ const InputData = () => {
                   placeholder="Enter cost of job"
                 />
               </div>
+              <div className="mb-3">
+                <CFormLabel htmlFor="jobCost">Other Related Note</CFormLabel>
+                <CFormInput
+                  type="number"
+                  id="jobCost"
+                  placeholder="Enter Other Related Note"
+                />
+              </div>
+
               <CButton color="primary">Submit</CButton>
             </CForm>
           </CCardBody>
