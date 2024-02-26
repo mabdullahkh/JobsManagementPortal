@@ -12,6 +12,9 @@ const ViewJobs = React.lazy(() => import("./views/theme/typography/ViewJobs"));
 const InsertEngineer = React.lazy(() =>
   import("./views/theme/typography/InsertEngineer")
 );
+const InsertInstaller = React.lazy(() =>
+  import("./views/theme/typography/InsertInstaller")
+);
 
 // Base
 const Accordion = React.lazy(() => import("./views/base/accordion/Accordion"));
@@ -95,6 +98,11 @@ const routes = [
     path: "/theme/insertengineer",
     name: "InsertEngineer",
     element: InsertEngineer,
+  },
+  {
+    path: "/theme/insertinstaller",
+    name: "InsertInstaller",
+    element: InsertInstaller,
   },
   { path: "/base", name: "Base", element: Cards, exact: true },
   { path: "/base/accordion", name: "Accordion", element: Accordion },
