@@ -19,6 +19,7 @@ const ViewJobs = () => {
       address: "123 Main St",
       date: "2024-02-22",
       engineer: "John Doe",
+      amountpaid: "2000",
       cost: 1000,
     },
     {
@@ -27,6 +28,7 @@ const ViewJobs = () => {
       address: "456 Elm St",
       date: "2024-02-23",
       engineer: "Jane Smith",
+      amountpaid: "1000",
       cost: 1500,
     },
     // Add more job objects as needed
@@ -59,6 +61,7 @@ const ViewJobs = () => {
           <CTableHeaderCell>Job Address</CTableHeaderCell>
           <CTableHeaderCell>Job Date</CTableHeaderCell>
           <CTableHeaderCell>Assigned Engineer</CTableHeaderCell>
+          <CTableHeaderCell>Total Amount Paid to Engr.</CTableHeaderCell>
           <CTableHeaderCell>Cost of Job</CTableHeaderCell>
           <CTableHeaderCell>Actions</CTableHeaderCell>
         </CTableRow>
@@ -70,6 +73,7 @@ const ViewJobs = () => {
             <CTableDataCell>{job.address}</CTableDataCell>
             <CTableDataCell>{job.date}</CTableDataCell>
             <CTableDataCell>{job.engineer}</CTableDataCell>
+            <CTableDataCell>{job.amountpaid}</CTableDataCell>
             <CTableDataCell>{job.cost}</CTableDataCell>
             <CTableDataCell>
               <CButton color="danger" onClick={() => handleDelete(job.id)}>
