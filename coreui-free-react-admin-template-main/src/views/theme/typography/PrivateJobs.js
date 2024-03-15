@@ -13,8 +13,7 @@ import {
   CRow,
 } from "@coreui/react";
 import { DocsExample } from "src/components";
-
-const InputData = () => {
+const PrivateJobs = () => {
   return (
     <CRow>
       <CCol xs={12}>
@@ -156,4 +155,4 @@ const InputData = () => {
   );
 };
 
-export default InputData;
+export default PrivateJobs;

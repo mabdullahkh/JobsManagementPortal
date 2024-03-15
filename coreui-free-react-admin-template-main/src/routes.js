@@ -8,6 +8,9 @@ const Typography = React.lazy(() =>
 const InputData = React.lazy(() =>
   import("./views/theme/typography/InputData")
 );
+const PrivateJobs = React.lazy(() =>
+  import("./views/theme/typography/PrivateJobs")
+);
 const ViewJobs = React.lazy(() => import("./views/theme/typography/ViewJobs"));
 const InsertEngineer = React.lazy(() =>
   import("./views/theme/typography/InsertEngineer")
@@ -93,6 +96,7 @@ const routes = [
   { path: "/theme/colors", name: "Colors", element: Colors },
   { path: "/theme/typography", name: "Typography", element: Typography },
   { path: "/theme/inputdata", name: "InputData", element: InputData },
+  { path: "/theme/privatejobs", name: "PrivateJobs", element: PrivateJobs },
   { path: "/theme/viewjobs", name: "ViewJobs", element: ViewJobs },
   {
     path: "/theme/insertengineer",

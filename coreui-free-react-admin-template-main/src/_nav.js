@@ -44,8 +44,14 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: "Insert Data",
+    name: "ECO4",
     to: "/theme/inputdata",
+    icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: "Private Jobs",
+    to: "/theme/privatejobs",
     icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
   },
   {
