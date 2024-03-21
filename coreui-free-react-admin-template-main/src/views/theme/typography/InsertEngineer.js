@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import BASE_URL from "src/Config";
 import {
   CButton,
   CCard,
@@ -8,8 +10,6 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
-  CFormSelect,
-  CFormTextarea,
   CRow,
   CTable,
   CTableCaption,
@@ -19,54 +19,90 @@ import {
   CTableHeaderCell,
   CTableDataCell,
 } from "@coreui/react";
-import { DocsExample } from "src/components";
 
 const InsertEngineer = () => {
-  const [jobs, setJobs] = useState([
-    {
-      id: 1,
-      dob: "2024-02-22",
-      name: "John Doe",
-    },
-    {
-      id: 2,
-      dob: "2024-02-23",
-      name: "Jane Smith",
-    },
-    // Add more job objects as needed
-  ]);
+  const [engineerName, setEngineerName] = useState("");
+  const [dob, setDOB] = useState("");
+  const [jobs, setJobs] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const [editedName, setEditedName] = useState("");
+  const [editedDOB, setEditedDOB] = useState("");
 
-  // Function to handle delete action
-  const handleDelete = (id) => {
-    // Implement delete functionality here
-    console.log("Delete job with id:", id);
+  useEffect(() => {
+    fetchEngineers();
+  }, []);
+
+  const fetchEngineers = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/allengineers`);
+      setJobs(response.data);
+    } catch (error) {
+      console.error("Error fetching engineers:", error);
+    }
   };
 
-  // Function to handle edit action
-  const handleEdit = (id) => {
-    // Implement edit functionality here
-    console.log("Edit job with id:", id);
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post(`${BASE_URL}/insertengineer`, {
+        name: engineerName,
+        dob: dob,
+      });
+      console.log("Engineer added successfully:", response.data);
+      setJobs([...jobs, response.data]);
+      setEngineerName("");
+      setDOB("");
+    } catch (error) {
+      console.error("Error adding engineer:", error);
+    }
   };
 
-  // Function to handle assign action
-  const handleAssign = (id) => {
-    // Implement assign functionality here
-    console.log("Assign job with id:", id);
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`${BASE_URL}/engineers/${id}`);
+      setJobs(jobs.filter((job) => job.id !== id));
+    } catch (error) {
+      console.error("Error deleting engineer:", error);
+    }
   };
+
+  const handleEdit = (id, name, dob) => {
+    setEditingId(id);
+    setEditedName(name);
+    setEditedDOB(dob);
+  };
+
+  const handleSave = async (id) => {
+    try {
+      await axios.put(`${BASE_URL}/engineers/${id}`, {
+        name: editedName,
+        dob: editedDOB,
+      });
+      setEditingId(null);
+      // Assuming the API returns the updated engineer details
+      fetchEngineers();
+    } catch (error) {
+      console.error("Error updating engineer:", error);
+    }
+  };
+
+  const handleCancel = () => {
+    setEditingId(null);
+    setEditedName("");
+    setEditedDOB("");
+  };
+
   return (
     <>
       <CRow className="justify-content-center">
-        {" "}
-        {/* Center aligning the content */}
         <CCol xs={12}>
           <CCard className="mb-4">
             <CCardHeader>
               <strong>Job Details</strong>
             </CCardHeader>
             <CCardBody>
-              <CRow>
-                <CCol xs={6}>
-                  <CForm>
+              <CForm>
+                <CRow>
+                  <CCol>
                     <div className="mb-3">
                       <CFormLabel htmlFor="engineerName">
                         Engineer Name
@@ -75,26 +111,31 @@ const InsertEngineer = () => {
                         type="text"
                         id="engineerName"
                         placeholder="Enter Engineer Name"
+                        value={engineerName}
+                        onChange={(e) => setEngineerName(e.target.value)}
                       />
                     </div>
-                  </CForm>
-                </CCol>
-                <CCol xs={6}>
-                  <CForm>
+                  </CCol>
+                  <CCol>
                     <div className="mb-3">
                       <CFormLabel htmlFor="dob">DOB</CFormLabel>
                       <CFormInput
                         type="date"
                         id="dob"
                         placeholder="Enter Date of Birth"
+                        value={dob}
+                        onChange={(e) => setDOB(e.target.value)}
                       />
                     </div>
-                  </CForm>
-                </CCol>
-              </CRow>
-              <div className="text-center">
-                <CButton color="primary">Submit</CButton>
-              </div>
+                  </CCol>
+                </CRow>
+
+                <div className="text-center">
+                  <CButton color="primary" onClick={handleSubmit}>
+                    Submit
+                  </CButton>
+                </div>
+              </CForm>
             </CCardBody>
           </CCard>
         </CCol>
@@ -111,15 +152,54 @@ const InsertEngineer = () => {
         <CTableBody>
           {jobs.map((job) => (
             <CTableRow key={job.id}>
-              <CTableDataCell>{job.name}</CTableDataCell>
-              <CTableDataCell>{job.dob}</CTableDataCell>
               <CTableDataCell>
-                <CButton color="danger" onClick={() => handleDelete(job.id)}>
-                  Delete
-                </CButton>
-                <CButton color="info" onClick={() => handleEdit(job.id)}>
-                  Edit
-                </CButton>
+                {editingId === job.id ? (
+                  <CFormInput
+                    type="text"
+                    value={editedName}
+                    onChange={(e) => setEditedName(e.target.value)}
+                  />
+                ) : (
+                  job.name
+                )}
+              </CTableDataCell>
+              <CTableDataCell>
+                {editingId === job.id ? (
+                  <CFormInput
+                    type="date"
+                    value={editedDOB}
+                    onChange={(e) => setEditedDOB(e.target.value)}
+                  />
+                ) : (
+                  job.dob
+                )}
+              </CTableDataCell>
+              <CTableDataCell>
+                {editingId === job.id ? (
+                  <>
+                    <CButton color="success" onClick={() => handleSave(job.id)}>
+                      Save
+                    </CButton>
+                    <CButton color="danger" onClick={handleCancel}>
+                      Cancel
+                    </CButton>
+                  </>
+                ) : (
+                  <>
+                    <CButton
+                      color="info"
+                      onClick={() => handleEdit(job.id, job.name, job.dob)}
+                    >
+                      Edit
+                    </CButton>
+                    <CButton
+                      color="danger"
+                      onClick={() => handleDelete(job.id)}
+                    >
+                      Delete
+                    </CButton>
+                  </>
+                )}
               </CTableDataCell>
             </CTableRow>
           ))}
