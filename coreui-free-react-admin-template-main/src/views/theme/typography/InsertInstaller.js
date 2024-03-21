@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import BASE_URL from "src/Config";
 import {
   CButton,
   CCard,
@@ -8,8 +10,6 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
-  CFormSelect,
-  CFormTextarea,
   CRow,
   CTable,
   CTableCaption,
@@ -19,81 +19,122 @@ import {
   CTableHeaderCell,
   CTableDataCell,
 } from "@coreui/react";
-import { DocsExample } from "src/components";
+
 const InsertInstaller = () => {
-  const [jobs, setJobs] = useState([
-    {
-      id: 1,
-      dob: "2024-02-22",
-      name: "John Doe",
-    },
-    {
-      id: 2,
-      dob: "2024-02-23",
-      name: "Jane Smith",
-    },
-    // Add more job objects as needed
-  ]);
+  const [installers, setInstallers] = useState([]);
+  const [installerName, setInstallerName] = useState("");
+  const [dob, setDOB] = useState("");
+  const [editingId, setEditingId] = useState(null);
+  const [editedName, setEditedName] = useState("");
+  const [editedDOB, setEditedDOB] = useState("");
 
-  // Function to handle delete action
-  const handleDelete = (id) => {
-    // Implement delete functionality here
-    console.log("Delete job with id:", id);
+  useEffect(() => {
+    fetchInstallers();
+  }, []);
+
+  const fetchInstallers = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/allinstallers`);
+      setInstallers(response.data);
+    } catch (error) {
+      console.error("Error fetching installers:", error);
+    }
   };
 
-  // Function to handle edit action
-  const handleEdit = (id) => {
-    // Implement edit functionality here
-    console.log("Edit job with id:", id);
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post(`${BASE_URL}/insertinstaller`, {
+        name: installerName,
+        dob: dob,
+      });
+      console.log("Installer added successfully:", response.data);
+      setInstallers([...installers, response.data]);
+      setInstallerName("");
+      setDOB("");
+    } catch (error) {
+      console.error("Error adding installer:", error);
+    }
   };
 
-  // Function to handle assign action
-  const handleAssign = (id) => {
-    // Implement assign functionality here
-    console.log("Assign job with id:", id);
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`${BASE_URL}/installers/${id}`);
+      setInstallers(installers.filter((installer) => installer.id !== id));
+    } catch (error) {
+      console.error("Error deleting installer:", error);
+    }
   };
+
+  const handleEdit = (id, name, dob) => {
+    setEditingId(id);
+    setEditedName(name);
+    setEditedDOB(dob);
+  };
+
+  const handleSave = async (id) => {
+    try {
+      await axios.put(`${BASE_URL}/installers/${id}`, {
+        name: editedName,
+        dob: editedDOB,
+      });
+      setEditingId(null);
+      fetchInstallers();
+    } catch (error) {
+      console.error("Error updating installer:", error);
+    }
+  };
+
+  const handleCancel = () => {
+    setEditingId(null);
+    setEditedName("");
+    setEditedDOB("");
+  };
+
   return (
     <>
       <CRow className="justify-content-center">
-        {" "}
-        {/* Center aligning the content */}
         <CCol xs={12}>
           <CCard className="mb-4">
             <CCardHeader>
-              <strong>Job Details</strong>
+              <strong>Installer Details</strong>
             </CCardHeader>
             <CCardBody>
-              <CRow>
-                <CCol xs={6}>
-                  <CForm>
+              <CForm>
+                <CRow>
+                  <CCol>
                     <div className="mb-3">
-                      <CFormLabel htmlFor="installername">
+                      <CFormLabel htmlFor="installerName">
                         Installer Name
                       </CFormLabel>
                       <CFormInput
                         type="text"
-                        id="installername"
+                        id="installerName"
                         placeholder="Enter Installer Name"
+                        value={installerName}
+                        onChange={(e) => setInstallerName(e.target.value)}
                       />
                     </div>
-                  </CForm>
-                </CCol>
-                <CCol xs={6}>
-                  <CForm>
+                  </CCol>
+                  <CCol>
                     <div className="mb-3">
                       <CFormLabel htmlFor="dob">DOB</CFormLabel>
                       <CFormInput
                         type="date"
                         id="dob"
                         placeholder="Enter Date of Birth"
+                        value={dob}
+                        onChange={(e) => setDOB(e.target.value)}
                       />
                     </div>
-                  </CForm>
-                </CCol>
-              </CRow>
-              <div className="text-center">
-                <CButton color="primary">Submit</CButton>
-              </div>
+                  </CCol>
+                </CRow>
+
+                <div className="text-center">
+                  <CButton color="primary" onClick={handleSubmit}>
+                    Submit
+                  </CButton>
+                </div>
+              </CForm>
             </CCardBody>
           </CCard>
         </CCol>
@@ -108,17 +149,61 @@ const InsertInstaller = () => {
           </CTableRow>
         </CTableHead>
         <CTableBody>
-          {jobs.map((job) => (
-            <CTableRow key={job.id}>
-              <CTableDataCell>{job.name}</CTableDataCell>
-              <CTableDataCell>{job.dob}</CTableDataCell>
+          {installers.map((installer) => (
+            <CTableRow key={installer.id}>
               <CTableDataCell>
-                <CButton color="danger" onClick={() => handleDelete(job.id)}>
-                  Delete
-                </CButton>
-                <CButton color="info" onClick={() => handleEdit(job.id)}>
-                  Edit
-                </CButton>
+                {editingId === installer.id ? (
+                  <CFormInput
+                    type="text"
+                    value={editedName}
+                    onChange={(e) => setEditedName(e.target.value)}
+                  />
+                ) : (
+                  installer.name
+                )}
+              </CTableDataCell>
+              <CTableDataCell>
+                {editingId === installer.id ? (
+                  <CFormInput
+                    type="date"
+                    value={editedDOB}
+                    onChange={(e) => setEditedDOB(e.target.value)}
+                  />
+                ) : (
+                  installer.dob
+                )}
+              </CTableDataCell>
+              <CTableDataCell>
+                {editingId === installer.id ? (
+                  <>
+                    <CButton
+                      color="success"
+                      onClick={() => handleSave(installer.id)}
+                    >
+                      Save
+                    </CButton>
+                    <CButton color="danger" onClick={handleCancel}>
+                      Cancel
+                    </CButton>
+                  </>
+                ) : (
+                  <>
+                    <CButton
+                      color="info"
+                      onClick={() =>
+                        handleEdit(installer.id, installer.name, installer.dob)
+                      }
+                    >
+                      Edit
+                    </CButton>
+                    <CButton
+                      color="danger"
+                      onClick={() => handleDelete(installer.id)}
+                    >
+                      Delete
+                    </CButton>
+                  </>
+                )}
               </CTableDataCell>
             </CTableRow>
           ))}

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EngineerController;
+use App\Http\Controllers\InstallerController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -20,16 +21,18 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-// Engineer Apis
 Route::post('/register', [UserController::class, 'register']);
-
 Route::post('/login', [UserController::class, 'login']);
-
+// Engineer Apis
 Route::post('/insertengineer', [EngineerController::class, 'store']);
 Route::get('/allengineers', [EngineerController::class, 'index']);
 Route::delete('/engineers/{id}', [EngineerController::class, 'destroy']);
 Route::put('/engineers/{id}', [EngineerController::class, 'update']);
 
+//Installer Apis
 
-
+Route::post('/insertinstaller', [InstallerController::class, 'store']);
+Route::get('/allinstallers', [InstallerController::class, 'index']);
+Route::delete('/installers/{id}', [InstallerController::class, 'destroy']);
+Route::put('/installers/{id}', [InstallerController::class, 'update']);
 
