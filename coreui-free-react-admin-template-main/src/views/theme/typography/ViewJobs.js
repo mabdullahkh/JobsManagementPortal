@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import BASE_URL from "src/Config";
 import {
   CButton,
   CTable,
@@ -11,28 +12,15 @@ import {
 } from "@coreui/react";
 
 const ViewJobs = () => {
-  // Sample job data, replace with your actual data
-  const [jobs, setJobs] = useState([
-    {
-      id: 1,
-      name: "Job 1",
-      address: "123 Main St",
-      date: "2024-02-22",
-      engineer: "John Doe",
-      amountpaid: "2000",
-      cost: 1000,
-    },
-    {
-      id: 2,
-      name: "Job 2",
-      address: "456 Elm St",
-      date: "2024-02-23",
-      engineer: "Jane Smith",
-      amountpaid: "1000",
-      cost: 1500,
-    },
-    // Add more job objects as needed
-  ]);
+  const [jobs, setJobs] = useState([]);
+
+  useEffect(() => {
+    // Fetch job data from Laravel backend
+    fetch(`${BASE_URL}/allec04`) // Update the URL according to your Laravel route
+      .then((response) => response.json())
+      .then((data) => setJobs(data))
+      .catch((error) => console.error("Error fetching job data:", error));
+  }, []);
 
   // Function to handle delete action
   const handleDelete = (id) => {
@@ -59,22 +47,38 @@ const ViewJobs = () => {
         <CTableRow>
           <CTableHeaderCell>Job Name</CTableHeaderCell>
           <CTableHeaderCell>Job Address</CTableHeaderCell>
-          <CTableHeaderCell>Job Date</CTableHeaderCell>
+          <CTableHeaderCell>Measure</CTableHeaderCell>
+          <CTableHeaderCell>Job Starting Date</CTableHeaderCell>
+          <CTableHeaderCell>EPC Rating</CTableHeaderCell>
+          <CTableHeaderCell>Expected Ending Date</CTableHeaderCell>
           <CTableHeaderCell>Assigned Engineer</CTableHeaderCell>
-          <CTableHeaderCell>Total Amount Paid to Engr.</CTableHeaderCell>
+          <CTableHeaderCell>Insulation Installer</CTableHeaderCell>
           <CTableHeaderCell>Cost of Job</CTableHeaderCell>
+          <CTableHeaderCell>Data Match</CTableHeaderCell>
+          <CTableHeaderCell>Other Related Note</CTableHeaderCell>
+          <CTableHeaderCell>Abs Field</CTableHeaderCell>
           <CTableHeaderCell>Actions</CTableHeaderCell>
         </CTableRow>
       </CTableHead>
       <CTableBody>
         {jobs.map((job) => (
           <CTableRow key={job.id}>
-            <CTableDataCell>{job.name}</CTableDataCell>
-            <CTableDataCell>{job.address}</CTableDataCell>
-            <CTableDataCell>{job.date}</CTableDataCell>
-            <CTableDataCell>{job.engineer}</CTableDataCell>
-            <CTableDataCell>{job.amountpaid}</CTableDataCell>
-            <CTableDataCell>{job.cost}</CTableDataCell>
+            <CTableDataCell>{job.jobname}</CTableDataCell>
+            <CTableDataCell>{job.jobaddress}</CTableDataCell>
+            <CTableDataCell>{job.measure}</CTableDataCell>
+            <CTableDataCell>{job.job_starting_date}</CTableDataCell>
+            <CTableDataCell>{job.epc_rating}</CTableDataCell>
+            <CTableDataCell>{job.expected_ending_date}</CTableDataCell>
+            <CTableDataCell>
+              {job.assigned_engineer ? job.assigned_engineer.name : "--"}
+            </CTableDataCell>
+            <CTableDataCell>
+              {job.insulation_installer ? job.insulation_installer.name : "--"}
+            </CTableDataCell>
+            <CTableDataCell>{job.cost_of_job}</CTableDataCell>
+            <CTableDataCell>{job.data_match}</CTableDataCell>
+            <CTableDataCell>{job.other_related_note}</CTableDataCell>
+            <CTableDataCell>{job.abs_field}</CTableDataCell>
             <CTableDataCell>
               <CButton color="danger" onClick={() => handleDelete(job.id)}>
                 Delete
