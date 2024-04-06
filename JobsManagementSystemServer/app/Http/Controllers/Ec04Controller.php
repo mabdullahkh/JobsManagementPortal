@@ -13,7 +13,6 @@ class Ec04Controller extends Controller
     public function index()
     {
         $EC04 = EC04::with(['assignedEngineer', 'insulationInstaller'])->get();
-        log::debug($EC04);
         return response()->json($EC04, 200);
     }
 
@@ -64,6 +63,9 @@ class Ec04Controller extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $job = EC04::findOrFail($id);
+        $job->delete();
+
+        return response()->json(['message' => 'Job deleted successfully'], 200);
     }
 }

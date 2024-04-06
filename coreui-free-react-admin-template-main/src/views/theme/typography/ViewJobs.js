@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import BASE_URL from "src/Config";
 import {
   CButton,
@@ -15,31 +17,33 @@ const ViewJobs = () => {
   const [jobs, setJobs] = useState([]);
 
   useEffect(() => {
-    // Fetch job data from Laravel backend
-    fetch(`${BASE_URL}/allec04`) // Update the URL according to your Laravel route
+    fetch(`${BASE_URL}/allec04`)
       .then((response) => response.json())
       .then((data) => setJobs(data))
       .catch((error) => console.error("Error fetching job data:", error));
   }, []);
 
-  // Function to handle delete action
   const handleDelete = (id) => {
-    // Implement delete functionality here
-    console.log("Delete job with id:", id);
+    fetch(`${BASE_URL}/allec04/${id}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (response.ok) {
+          // Remove the deleted job from state
+          setJobs(jobs.filter((job) => job.id !== id));
+          // Show success message
+          toast.success("Job deleted successfully");
+        } else {
+          console.error("Failed to delete job");
+        }
+      })
+      .catch((error) => console.error("Error deleting job:", error));
   };
 
-  // Function to handle edit action
   const handleEdit = (id) => {
-    // Implement edit functionality here
+    // Implement edit functionality, maybe a modal for editing
     console.log("Edit job with id:", id);
   };
-
-  // Function to handle assign action
-  const handleAssign = (id) => {
-    // Implement assign functionality here
-    console.log("Assign job with id:", id);
-  };
-
   return (
     <CTable>
       <CTableCaption>List of Jobs</CTableCaption>

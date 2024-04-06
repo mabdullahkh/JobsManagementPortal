@@ -12,6 +12,10 @@ import {
   CFormInput,
   CFormLabel,
   CFormSelect,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
   CFormTextarea,
   CRow,
 } from "@coreui/react";
@@ -33,10 +37,13 @@ const InputData = () => {
   const [dataMatch, setDataMatch] = useState("");
   const [engineers, setEngineers] = useState([]);
   const [installers, setInstallers] = useState([]);
+  const [showModal, setShowModal] = useState(false); // State to control modal visibility
+  const [epcRatings, setEpcRatings] = useState([]);
 
   useEffect(() => {
     fetchEngineers();
     fetchInstallers();
+    fetchEpcRatings();
   }, []);
 
   const fetchEngineers = async () => {
@@ -54,6 +61,18 @@ const InputData = () => {
     } catch (error) {
       console.error("Error fetching installers:", error);
     }
+  };
+  const fetchEpcRatings = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/epc-ratings`);
+      setEpcRatings(response.data);
+    } catch (error) {
+      console.error("Error fetching EPC ratings:", error);
+    }
+  };
+  const handleEpcRatingChange = (e) => {
+    const selectedEpcRating = e.target.value;
+    setEpcRating(selectedEpcRating);
   };
   const handleSubmit = async () => {
     try {
@@ -74,6 +93,21 @@ const InputData = () => {
         abs_field: absField,
       });
       console.log("Engineer added successfully:", response.data);
+      // Reset form fields
+      setJobName("");
+      setJobAddress("");
+      setJobStartingDate("");
+      setJobExpectedEndingDate("");
+      setEngineerName("");
+      setCostOfJob("");
+      setOtherRelatedNotes("");
+      setJobLeads("");
+      setMeasure("");
+      setEpcRating("");
+      setAbsField("");
+      setInsulationIntallerName("");
+      setDataMatch("");
+      setShowModal(true); // Show modal when job is inserted successfully
     } catch (error) {
       console.error("Error adding engineer:", error);
     }
@@ -200,13 +234,17 @@ const InputData = () => {
                   </div>
                   <div className="mb-3">
                     <CFormLabel htmlFor="epcRating">EPC Rating</CFormLabel>
-                    <CFormInput
+                    <CFormSelect
                       id="epcRating"
-                      value={epcRating}
-                      onChange={(e) => setEpcRating(e.target.value)}
-                      type="number"
-                      placeholder="Enter EPC Rating"
-                    />
+                      onChange={handleEpcRatingChange}
+                    >
+                      <option value="">Select EPC Rating</option>
+                      {epcRatings.map((rating) => (
+                        <option key={rating.id} value={rating.name}>
+                          {rating.name}
+                        </option>
+                      ))}
+                    </CFormSelect>
                   </div>
 
                   <div className="mb-3">
@@ -262,6 +300,15 @@ const InputData = () => {
           </CCardBody>
         </CCard>
       </CCol>
+      <CModal show={showModal} onClose={() => setShowModal(false)} size="sm">
+        <CModalHeader closeButton>Success</CModalHeader>
+        <CModalBody>Job inserted successfully!</CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setShowModal(false)}>
+            Close
+          </CButton>
+        </CModalFooter>
+      </CModal>
     </CRow>
   );
 };
