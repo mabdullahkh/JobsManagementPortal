@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import BASE_URL from "src/Config";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   CButton,
   CCard,
@@ -48,11 +50,13 @@ const InsertEngineer = () => {
         dob: dob,
       });
       console.log("Engineer added successfully:", response.data);
+      toast.success("Engineer added successfully");
       setJobs([...jobs, response.data]);
       setEngineerName("");
       setDOB("");
     } catch (error) {
       console.error("Error adding engineer:", error);
+      toast.error("Error adding engineer");
     }
   };
 
@@ -62,6 +66,7 @@ const InsertEngineer = () => {
       setJobs(jobs.filter((job) => job.id !== id));
     } catch (error) {
       console.error("Error deleting engineer:", error);
+      toast.error("Error deleting engineer");
     }
   };
 
@@ -80,8 +85,10 @@ const InsertEngineer = () => {
       setEditingId(null);
       // Assuming the API returns the updated engineer details
       fetchEngineers();
+      toast.success("Engineer Updated Successfuly");
     } catch (error) {
       console.error("Error updating engineer:", error);
+      toast.error("Error updating engineer");
     }
   };
 
@@ -205,6 +212,7 @@ const InsertEngineer = () => {
           ))}
         </CTableBody>
       </CTable>
+      <ToastContainer />
     </>
   );
 };

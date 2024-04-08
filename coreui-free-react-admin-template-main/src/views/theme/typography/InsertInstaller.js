@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import BASE_URL from "src/Config";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   CButton,
   CCard,
@@ -48,11 +50,13 @@ const InsertInstaller = () => {
         dob: dob,
       });
       console.log("Installer added successfully:", response.data);
+      toast.success("Installer added successfully");
       setInstallers([...installers, response.data]);
       setInstallerName("");
       setDOB("");
     } catch (error) {
       console.error("Error adding installer:", error);
+      toast.error("Error adding installer");
     }
   };
 
@@ -62,6 +66,7 @@ const InsertInstaller = () => {
       setInstallers(installers.filter((installer) => installer.id !== id));
     } catch (error) {
       console.error("Error deleting installer:", error);
+      toast.error("Error deleting installer");
     }
   };
 
@@ -79,8 +84,10 @@ const InsertInstaller = () => {
       });
       setEditingId(null);
       fetchInstallers();
+      toast.success("installer updated successfuly");
     } catch (error) {
       console.error("Error updating installer:", error);
+      toast.error("Error updating installer");
     }
   };
 
@@ -209,6 +216,7 @@ const InsertInstaller = () => {
           ))}
         </CTableBody>
       </CTable>
+      <ToastContainer />
     </>
   );
 };
