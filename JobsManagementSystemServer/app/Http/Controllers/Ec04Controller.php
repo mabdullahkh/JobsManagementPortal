@@ -35,6 +35,7 @@ class Ec04Controller extends Controller
             'data_match' => 'required|string|max:255',
             'other_related_note' => 'nullable|string|max:255',
             'abs_field' => 'nullable|string|max:255',
+            'job_type' => 'nullable|string|max:255',
         ]);
         $EC04 = EC04::create($validatedData);
     

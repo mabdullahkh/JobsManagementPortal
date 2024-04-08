@@ -54,6 +54,7 @@ const ViewJobs = () => {
           <CTableHeaderCell>Measure</CTableHeaderCell>
           <CTableHeaderCell>Job Starting Date</CTableHeaderCell>
           <CTableHeaderCell>EPC Rating</CTableHeaderCell>
+          <CTableHeaderCell>Job Type</CTableHeaderCell>
           <CTableHeaderCell>Expected Ending Date</CTableHeaderCell>
           <CTableHeaderCell>Assigned Engineer</CTableHeaderCell>
           <CTableHeaderCell>Insulation Installer</CTableHeaderCell>
@@ -72,6 +73,7 @@ const ViewJobs = () => {
             <CTableDataCell>{job.measure}</CTableDataCell>
             <CTableDataCell>{job.job_starting_date}</CTableDataCell>
             <CTableDataCell>{job.epc_rating}</CTableDataCell>
+            <CTableDataCell>{job.job_type}</CTableDataCell>
             <CTableDataCell>{job.expected_ending_date}</CTableDataCell>
             <CTableDataCell>
               {job.assigned_engineer ? job.assigned_engineer.name : "--"}

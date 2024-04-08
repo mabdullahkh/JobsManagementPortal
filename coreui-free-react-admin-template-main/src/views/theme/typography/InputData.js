@@ -39,11 +39,14 @@ const InputData = () => {
   const [installers, setInstallers] = useState([]);
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
   const [epcRatings, setEpcRatings] = useState([]);
+  const [jobType, setJobType] = useState([]);
+  const [jobTypeName, setJobTypeName] = useState("");
 
   useEffect(() => {
     fetchEngineers();
     fetchInstallers();
     fetchEpcRatings();
+    fetchJobTypes();
   }, []);
 
   const fetchEngineers = async () => {
@@ -70,6 +73,14 @@ const InputData = () => {
       console.error("Error fetching EPC ratings:", error);
     }
   };
+  const fetchJobTypes = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/job-types`);
+      setJobType(response.data);
+    } catch (error) {
+      console.error("Error fetching EPC ratings:", error);
+    }
+  };
   const handleEpcRatingChange = (e) => {
     const selectedEpcRating = e.target.value;
     setEpcRating(selectedEpcRating);
@@ -91,6 +102,7 @@ const InputData = () => {
         data_match: dataMatch,
         other_related_note: otherRelatedNotes,
         abs_field: absField,
+        job_type: jobTypeName,
       });
       console.log("Engineer added successfully:", response.data);
       // Reset form fields
@@ -184,6 +196,21 @@ const InputData = () => {
                     </CFormSelect>
                   </div>
                   <div className="mb-3">
+                    <CFormLabel htmlFor="jobTypes">Job Type</CFormLabel>
+                    <CFormSelect
+                      id="jobtype"
+                      value={jobTypeName}
+                      onChange={(e) => setJobTypeName(e.target.value)}
+                    >
+                      <option value="">Select Job Type</option>
+                      {jobType.map((jobType) => (
+                        <option key={jobType.id} value={jobType.name}>
+                          {jobType.name}
+                        </option>
+                      ))}
+                    </CFormSelect>
+                  </div>
+                  <div className="mb-3">
                     <CFormLabel htmlFor="jobCost">Cost of Job</CFormLabel>
                     <CFormInput
                       type="number"
@@ -226,6 +253,7 @@ const InputData = () => {
                   <div className="mb-3">
                     <CFormLabel htmlFor="Measure">Measure</CFormLabel>
                     <CFormInput
+                      type="text"
                       id="measure"
                       value={measure}
                       onChange={(e) => setMeasure(e.target.value)}

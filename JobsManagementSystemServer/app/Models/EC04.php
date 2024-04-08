@@ -27,6 +27,7 @@ class EC04 extends Model
         'status',
         'data_match',
         'abs_field',
+        'job_type',
     ];
 
     public function assignedEngineer()

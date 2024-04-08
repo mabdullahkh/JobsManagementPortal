@@ -6,6 +6,7 @@ use App\Http\Controllers\EngineerController;
 use App\Http\Controllers\InstallerController;
 use App\Http\Controllers\Ec04Controller;
 use App\Http\Controllers\EpcRatingController;
+use App\Http\Controllers\JobTypesController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -48,3 +49,7 @@ Route::delete('/allec04/{id}', [Ec04Controller::class, 'destroy']); // Delete a 
 //EPC Rating API
 
 Route::get('/epc-ratings', [EpcRatingController::class, 'index']);
+
+// Job Type Api
+
+Route::get('/job-types', [JobTypesController::class, 'index']);
