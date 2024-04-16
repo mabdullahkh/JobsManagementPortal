@@ -17,7 +17,7 @@ import { cilLockLocked, cilUser } from "@coreui/icons";
 import BASE_URL from "src/Config";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
@@ -28,13 +28,13 @@ const Login = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, password }),
       });
 
       if (response.ok) {
         console.log(response);
         // Redirect to dashboard
-        //window.location.href = "/dashboard";
+        window.location.href = "/dashboard";
       } else {
         setError("Login failed. Please check your credentials.");
       }
@@ -61,10 +61,10 @@ const Login = () => {
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
                     <CFormInput
-                      placeholder="Username"
-                      autoComplete="username"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
+                      placeholder="email"
+                      autoComplete="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-4">

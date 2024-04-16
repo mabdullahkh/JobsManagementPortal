@@ -22,7 +22,7 @@ class UserController extends Controller
         ]);
     
         // Extract credentials from the request
-        $user = User::where('user_email', $request->input('email'))->first();
+        $user = User::where('email', $request->input('email'))->first();
 
         if ($user && Hash::check($request->input('password'), $user->password)) {
             // Authentication passed

@@ -10,6 +10,9 @@ use App\Http\Controllers\EpcRatingController;
 use App\Http\Controllers\JobTypesController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\AuthController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -25,8 +28,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post('/register', [UserController::class, 'register']);
-Route::post('/login', [UserController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/signup', [AuthController::class, 'signup']);
+
 // Engineer Apis
 Route::post('/insertengineer', [EngineerController::class, 'store']);
 Route::get('/allengineers', [EngineerController::class, 'index']);

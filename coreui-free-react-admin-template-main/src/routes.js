@@ -1,6 +1,9 @@
+import { element } from "prop-types";
 import React from "react";
 
+import Login from "./views/pages/login/Login";
 const Dashboard = React.lazy(() => import("./views/dashboard/Dashboard"));
+//const Login = React.lazy(() => import("./views/pages/login/Login"));
 const Colors = React.lazy(() => import("./views/theme/colors/Colors"));
 const Typography = React.lazy(() =>
   import("./views/theme/typography/Typography")
