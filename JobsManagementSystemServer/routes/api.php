@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\EngineerController;
 use App\Http\Controllers\InstallerController;
 use App\Http\Controllers\Ec04Controller;
+use App\Http\Controllers\PrivateJobController;
 use App\Http\Controllers\EpcRatingController;
 use App\Http\Controllers\JobTypesController;
 use Illuminate\Support\Facades\Route;
@@ -46,6 +47,11 @@ Route::get('/allec04', [Ec04Controller::class, 'index']);
 Route::delete('/allec04/{id}', [Ec04Controller::class, 'destroy']); // Delete a job
 Route::post('/ec04update/{id}', [Ec04Controller::class, 'update']);
 
+// Private Job API
+Route::post('/privatejob', [PrivateJobController::class, 'store']);
+Route::get('/allprivatejob', [PrivateJobController::class, 'index']);
+Route::delete('/allprivatejob/{id}', [PrivateJobController::class, 'destroy']); // Delete a job
+Route::post('/privatejobupdate/{id}', [PrivateJobController::class, 'update']);
 
 //EPC Rating API
 
@@ -54,3 +60,5 @@ Route::get('/epc-ratings', [EpcRatingController::class, 'index']);
 // Job Type Api
 
 Route::get('/job-types', [JobTypesController::class, 'index']);
+
+

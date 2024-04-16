@@ -56,8 +56,14 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: "View Jobs",
+    name: "View Ec04 Jobs",
     to: "/theme/viewjobs",
+    icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: "View Private Jobs",
+    to: "/theme/viewprivatejobs",
     icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
   },
   {
@@ -72,6 +78,7 @@ const _nav = [
     to: "/theme/insertinstaller",
     icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
   },
+
   // {
   //   component: CNavTitle,
   //   name: "Components",

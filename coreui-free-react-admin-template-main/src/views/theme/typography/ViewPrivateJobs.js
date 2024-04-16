@@ -14,20 +14,20 @@ import {
   CTableDataCell,
 } from "@coreui/react";
 
-const ViewJobs = () => {
+const ViewPrivateJobs = () => {
   const [jobs, setJobs] = useState([]);
   const [editableRow, setEditableRow] = useState(null);
   const [editedValues, setEditedValues] = useState({});
 
   useEffect(() => {
-    fetch(`${BASE_URL}/allec04`)
+    fetch(`${BASE_URL}/allprivatejob`)
       .then((response) => response.json())
       .then((data) => setJobs(data))
       .catch((error) => console.error("Error fetching job data:", error));
   }, []);
 
   const handleDelete = (id) => {
-    fetch(`${BASE_URL}/allec04/${id}`, {
+    fetch(`${BASE_URL}/allprivatejob/${id}`, {
       method: "DELETE",
     })
       .then((response) => {
@@ -48,7 +48,7 @@ const ViewJobs = () => {
   };
 
   const handleUpdate = (id) => {
-    fetch(`${BASE_URL}/ec04update/${id}`, {
+    fetch(`${BASE_URL}/privatejobupdate/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -293,4 +293,4 @@ const ViewJobs = () => {
   );
 };
 
-export default ViewJobs;
+export default ViewPrivateJobs;
