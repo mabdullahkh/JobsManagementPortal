@@ -44,6 +44,7 @@ Route::put('/installers/{id}', [InstallerController::class, 'update']);
 Route::post('/ec04', [Ec04Controller::class, 'store']);
 Route::get('/allec04', [Ec04Controller::class, 'index']);
 Route::delete('/allec04/{id}', [Ec04Controller::class, 'destroy']); // Delete a job
+Route::post('/ec04update/{id}', [Ec04Controller::class, 'update']);
 
 
 //EPC Rating API
