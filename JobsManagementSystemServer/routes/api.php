@@ -10,6 +10,7 @@ use App\Http\Controllers\EpcRatingController;
 use App\Http\Controllers\JobTypesController;
 use App\Http\Controllers\DataMatchController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AbsFieldController;
 
 use App\Http\Controllers\AuthController;
 
@@ -70,3 +71,6 @@ Route::get('/job-types', [JobTypesController::class, 'index']);
 
 Route::get('/datamatches', [DataMatchController::class, 'index']);
 
+// Abs feild api
+
+Route::get('/abs-fields', [AbsFieldController::class, 'index']);

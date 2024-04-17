@@ -36,7 +36,6 @@ const PrivateJob = () => {
   const [epcRating, setEpcRating] = useState("");
   const [absField, setAbsField] = useState("");
   const [insulationIntallerName, setInsulationIntallerName] = useState("");
-  const [dataMatch, setDataMatch] = useState("");
   const [engineers, setEngineers] = useState([]);
   const [installers, setInstallers] = useState([]);
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
@@ -45,6 +44,7 @@ const PrivateJob = () => {
   const [jobTypeName, setJobTypeName] = useState("");
   const [selectedDataMatch, setSelectedDataMatch] = useState("");
   const [dataMatches, setDataMatches] = useState([]);
+  const [absFields, setAbsFields] = useState([]); // Define absFields state variable
 
   useEffect(() => {
     fetchEngineers();
@@ -52,7 +52,17 @@ const PrivateJob = () => {
     fetchEpcRatings();
     fetchJobTypes();
     fetchDataMatches();
+    fetchAbsFields();
   }, []);
+  const fetchAbsFields = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/abs-fields`);
+      setAbsFields(response.data);
+    } catch (error) {
+      console.error("Error fetching ABS fields:", error);
+    }
+  };
+
   const fetchDataMatches = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/datamatches`);
@@ -294,13 +304,23 @@ const PrivateJob = () => {
                     </div>
 
                     <div className="mb-3">
-                      <CFormLabel htmlFor="abdfeild">ABS Field</CFormLabel>
-                      <CFormInput
-                        id="absfeild"
+                      <CFormLabel htmlFor="absField">ABS Field</CFormLabel>
+                      <CFormSelect
+                        id="absField"
                         value={absField}
                         onChange={(e) => setAbsField(e.target.value)}
-                        placeholder="Enter ABS Feild"
-                      />
+                      >
+                        <option value="">Select ABS Field</option>
+                        {absFields.map((abs) => (
+                          <option
+                            key={abs.id}
+                            value={`${abs.floor_area_segment} - ${abs.starting_band} to ${abs.finishing_band}`}
+                          >
+                            {abs.floor_area_segment} - {abs.starting_band} to{" "}
+                            {abs.finishing_band}
+                          </option>
+                        ))}
+                      </CFormSelect>
                     </div>
                     <div className="mb-3">
                       <CFormLabel htmlFor="insulationInstaller">
