@@ -43,14 +43,24 @@ const PrivateJob = () => {
   const [epcRatings, setEpcRatings] = useState([]);
   const [jobType, setJobType] = useState([]);
   const [jobTypeName, setJobTypeName] = useState("");
+  const [selectedDataMatch, setSelectedDataMatch] = useState("");
+  const [dataMatches, setDataMatches] = useState([]);
 
   useEffect(() => {
     fetchEngineers();
     fetchInstallers();
     fetchEpcRatings();
     fetchJobTypes();
+    fetchDataMatches();
   }, []);
-
+  const fetchDataMatches = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/datamatches`);
+      setDataMatches(response.data);
+    } catch (error) {
+      console.error("Error fetching data matches:", error);
+    }
+  };
   const fetchEngineers = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/allengineers`);
@@ -101,7 +111,7 @@ const PrivateJob = () => {
         assigned_engineer_id: engineerName,
         insulation_installer_id: insulationIntallerName,
         cost_of_job: costOfJob,
-        data_match: dataMatch,
+        data_match: selectedDataMatch,
         other_related_note: otherRelatedNotes,
         abs_field: absField,
         job_type: jobTypeName,
@@ -120,7 +130,7 @@ const PrivateJob = () => {
       setEpcRating("");
       setAbsField("");
       setInsulationIntallerName("");
-      setDataMatch("");
+      setSelectedDataMatch("");
       setShowModal(true); // Show modal when job is inserted successfully
     } catch (error) {
       console.error("Error adding Job:", error);
@@ -313,12 +323,18 @@ const PrivateJob = () => {
                     </div>
                     <div className="mb-3">
                       <CFormLabel htmlFor="dataMatch">Data Match</CFormLabel>
-                      <CFormInput
+                      <CFormSelect
                         id="dataMatch"
-                        value={dataMatch}
-                        onChange={(e) => setDataMatch(e.target.value)}
-                        placeholder="Enter Data Match"
-                      />
+                        value={selectedDataMatch}
+                        onChange={(e) => setSelectedDataMatch(e.target.value)}
+                      >
+                        <option value="">Select Data Match</option>
+                        {dataMatches.map((dataMatch) => (
+                          <option key={dataMatch.id} value={dataMatch.name}>
+                            {dataMatch.name}
+                          </option>
+                        ))}
+                      </CFormSelect>
                     </div>
                     <div className="mb-3">
                       <CFormLabel htmlFor="jobEvidence">

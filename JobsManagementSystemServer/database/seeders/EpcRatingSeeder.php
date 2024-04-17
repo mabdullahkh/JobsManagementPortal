@@ -23,4 +23,9 @@ class EpcRatingSeeder extends Seeder
             ]);
         }
     }
+    public function down()
+{
+    // Deleting the seeded data from the data_match table
+    DB::table('data_match')->whereIn('name', ['Matched Successfully', 'In Process', 'Rejected'])->delete();
+}
 }

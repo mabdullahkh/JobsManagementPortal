@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             EpcRatingSeeder::class,
             JobTypeSeeder::class,
+            DataMatchSeeder::class,
             // other seeders...
         ]);
     }

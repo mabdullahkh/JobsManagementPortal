@@ -8,6 +8,7 @@ use App\Http\Controllers\Ec04Controller;
 use App\Http\Controllers\PrivateJobController;
 use App\Http\Controllers\EpcRatingController;
 use App\Http\Controllers\JobTypesController;
+use App\Http\Controllers\DataMatchController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
@@ -65,4 +66,7 @@ Route::get('/epc-ratings', [EpcRatingController::class, 'index']);
 
 Route::get('/job-types', [JobTypesController::class, 'index']);
 
+// Data Match APi
+
+Route::get('/datamatches', [DataMatchController::class, 'index']);
 
