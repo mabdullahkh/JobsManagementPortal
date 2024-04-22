@@ -30,6 +30,10 @@ const PrivateJob = () => {
   const [jobExpectedEndingDate, setJobExpectedEndingDate] = useState("");
   const [engineerName, setEngineerName] = useState("");
   const [costOfJob, setCostOfJob] = useState("");
+  const [labourCost, setLabourCost] = useState("");
+  const [materialCost, setMaterialCost] = useState("");
+  const [otherExpense, setOtherExpense] = useState("");
+
   const [otherRelatedNotes, setOtherRelatedNotes] = useState("");
   const [jobLeads, setJobLeads] = useState("");
   const [measure, setMeasure] = useState("");
@@ -117,7 +121,6 @@ const PrivateJob = () => {
         job_starting_date: jobStartingDate,
         epc_rating: epcRating,
         expected_ending_date: jobExpectedEndingDate,
-        expected_ending_date: jobExpectedEndingDate,
         assigned_engineer_id: engineerName,
         insulation_installer_id: insulationIntallerName,
         cost_of_job: costOfJob,
@@ -125,8 +128,18 @@ const PrivateJob = () => {
         other_related_note: otherRelatedNotes,
         abs_field: absField,
         job_type: jobTypeName,
+        labour_cost: labourCost,
+        material_cost: materialCost,
+        other_expense: otherExpense,
       });
       console.log("Job added successfully:", response.data);
+      // Calculate net profit
+      const netProfit =
+        parseFloat(labourCost) +
+        parseFloat(materialCost) +
+        parseFloat(otherExpense) -
+        parseFloat(costOfJob);
+      console.log("Net profit:", netProfit);
       toast.success("Job added successfully");
       setJobName("");
       setJobAddress("");
@@ -147,6 +160,7 @@ const PrivateJob = () => {
       toast.error("Error in Adding Job");
     }
   };
+
   return (
     <>
       <CRow>
@@ -260,6 +274,18 @@ const PrivateJob = () => {
                         placeholder="Enter Other Related Note"
                       />
                     </div>
+                    <div className="mb-3">
+                      <CFormLabel htmlFor="materialCost">
+                        Material Cost
+                      </CFormLabel>
+                      <CFormInput
+                        type="number"
+                        id="materialCost"
+                        value={materialCost}
+                        onChange={(e) => setMaterialCost(e.target.value)}
+                        placeholder="Enter material cost"
+                      />
+                    </div>
 
                     <CButton color="primary" onClick={handleSubmit}>
                       Submit
@@ -364,6 +390,28 @@ const PrivateJob = () => {
                         type="file"
                         id="jobEvidence"
                         accept=".pdf,image/*"
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <CFormLabel htmlFor="labourCost">Labour Cost</CFormLabel>
+                      <CFormInput
+                        type="number"
+                        id="labourCost"
+                        value={labourCost}
+                        onChange={(e) => setLabourCost(e.target.value)}
+                        placeholder="Enter labour cost"
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <CFormLabel htmlFor="otherExpense">
+                        Other Expense
+                      </CFormLabel>
+                      <CFormInput
+                        type="number"
+                        id="otherExpense"
+                        value={otherExpense}
+                        onChange={(e) => setOtherExpense(e.target.value)}
+                        placeholder="Enter other expense"
                       />
                     </div>
                   </CForm>

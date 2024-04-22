@@ -28,6 +28,10 @@ class PrivateJob extends Model
         'data_match',
         'abs_field',
         'job_type',
+        'labour_cost',
+        'material_cost',
+        'other_expense',
+        'net_profit',
     ];
 
     public function assignedEngineer()

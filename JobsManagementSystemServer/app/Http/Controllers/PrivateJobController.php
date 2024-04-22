@@ -38,7 +38,14 @@ class PrivateJobController extends Controller
             'other_related_note' => 'nullable|string|max:255',
             'abs_field' => 'nullable|string|max:255',
             'job_type' => 'nullable|string|max:255',
+            'labour_cost' => 'required|numeric',
+            'material_cost' => 'required|numeric',
+            'other_expense' => 'required|numeric',
         ]);
+        $netProfit = ($request->labour_cost + $request->material_cost + $request->other_expense) - $request->cost_of_job;
+    
+        $validatedData['net_profit'] = $netProfit;
+    
         $PrivateJob = PrivateJob::create($validatedData);
     
         return response()->json($PrivateJob, 201);
