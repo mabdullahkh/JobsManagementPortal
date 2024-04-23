@@ -38,6 +38,12 @@ class Ec04Controller extends Controller
             'other_related_note' => 'nullable|string|max:255',
             'abs_field' => 'nullable|string|max:255',
             'job_type' => 'nullable|string|max:255',
+            'labour_cost' => 'required|numeric',
+            'material_cost' => 'required|numeric',
+            'other_expense' => 'required|numeric',
+            'net_profit' => 'required|numeric',
+            'abs_rate' => 'required|numeric',
+
         ]);
         $EC04 = EC04::create($validatedData);
     

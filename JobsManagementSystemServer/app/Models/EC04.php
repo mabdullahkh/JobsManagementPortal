@@ -28,6 +28,11 @@ class EC04 extends Model
         'data_match',
         'abs_field',
         'job_type',
+        'labour_cost',
+        'material_cost',
+        'other_expense',
+        'net_profit',
+        'abs_rate'
     ];
 
     public function assignedEngineer()

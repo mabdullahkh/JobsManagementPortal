@@ -42,6 +42,10 @@ const InputData = () => {
   const [epcRatings, setEpcRatings] = useState([]);
   const [jobType, setJobType] = useState([]);
   const [jobTypeName, setJobTypeName] = useState("");
+  const [labourCost, setLabourCost] = useState("");
+  const [materialCost, setMaterialCost] = useState("");
+  const [otherExpense, setOtherExpense] = useState("");
+  const [absRate, setAbsRate] = useState("");
   const [selectedDataMatch, setSelectedDataMatch] = useState("");
   const [dataMatches, setDataMatches] = useState([]);
   const [absFields, setAbsFields] = useState([]); // Define absFields state variable
@@ -111,6 +115,11 @@ const InputData = () => {
   };
   const handleSubmit = async () => {
     try {
+      const calculatedNetProfit =
+        parseFloat(absRate) * parseFloat(absField) -
+        (parseFloat(labourCost) +
+          parseFloat(materialCost) +
+          parseFloat(otherExpense));
       const response = await axios.post(`${BASE_URL}/ec04`, {
         jobname: jobName,
         joblead: jobLeads,
@@ -126,7 +135,11 @@ const InputData = () => {
         data_match: selectedDataMatch,
         other_related_note: otherRelatedNotes,
         abs_field: absField,
-        job_type: jobTypeName,
+        labour_cost: labourCost,
+        material_cost: materialCost,
+        other_expense: otherExpense,
+        net_profit: calculatedNetProfit,
+        abs_rate: absRate,
       });
       console.log("Job added successfully:", response.data);
       toast.success("Job added successfully");
@@ -262,6 +275,29 @@ const InputData = () => {
                         placeholder="Enter Other Related Note"
                       />
                     </div>
+                    <div className="mb-3">
+                      <CFormLabel htmlFor="otherExpense">
+                        Other Expense
+                      </CFormLabel>
+                      <CFormInput
+                        type="number"
+                        id="otherExpense"
+                        value={otherExpense}
+                        onChange={(e) => setOtherExpense(e.target.value)}
+                        placeholder="Enter other expense"
+                      />
+                    </div>
+                    {/* ABS Rate */}
+                    <div className="mb-3">
+                      <CFormLabel htmlFor="absRate">ABS Rate</CFormLabel>
+                      <CFormInput
+                        type="number"
+                        id="absRate"
+                        value={absRate}
+                        onChange={(e) => setAbsRate(e.target.value)}
+                        placeholder="Enter ABS rate"
+                      />
+                    </div>
 
                     <CButton color="primary" onClick={handleSubmit}>
                       Submit
@@ -314,12 +350,9 @@ const InputData = () => {
                       >
                         <option value="">Select ABS Field</option>
                         {absFields.map((abs) => (
-                          <option
-                            key={abs.id}
-                            value={`${abs.floor_area_segment} - ${abs.starting_band} to ${abs.finishing_band}`}
-                          >
+                          <option key={abs.id} value={abs.cost_savings}>
                             {abs.floor_area_segment} - {abs.starting_band} to{" "}
-                            {abs.finishing_band}
+                            {abs.finishing_band} is {abs.cost_savings}
                           </option>
                         ))}
                       </CFormSelect>
@@ -368,6 +401,30 @@ const InputData = () => {
                         accept=".pdf,image/*"
                       />
                     </div>
+                    <div className="mb-3">
+                      <CFormLabel htmlFor="labourCost">Labour Cost</CFormLabel>
+                      <CFormInput
+                        type="number"
+                        id="labourCost"
+                        value={labourCost}
+                        onChange={(e) => setLabourCost(e.target.value)}
+                        placeholder="Enter labour cost"
+                      />
+                    </div>
+                    {/* Material Cost */}
+                    <div className="mb-3">
+                      <CFormLabel htmlFor="materialCost">
+                        Material Cost
+                      </CFormLabel>
+                      <CFormInput
+                        type="number"
+                        id="materialCost"
+                        value={materialCost}
+                        onChange={(e) => setMaterialCost(e.target.value)}
+                        placeholder="Enter material cost"
+                      />
+                    </div>
+                    {/* Other Expense */}
                   </CForm>
                 </CCol>
               </CRow>
