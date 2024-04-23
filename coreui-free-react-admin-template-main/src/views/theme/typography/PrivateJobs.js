@@ -343,7 +343,7 @@ const PrivateJob = () => {
                             value={`${abs.floor_area_segment} - ${abs.starting_band} to ${abs.finishing_band}`}
                           >
                             {abs.floor_area_segment} - {abs.starting_band} to{" "}
-                            {abs.finishing_band}
+                            {abs.finishing_band} is {abs.cost_savings}
                           </option>
                         ))}
                       </CFormSelect>
