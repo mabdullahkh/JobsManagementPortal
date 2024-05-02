@@ -49,8 +49,11 @@ const PrivateJob = () => {
   const [selectedDataMatch, setSelectedDataMatch] = useState("");
   const [dataMatches, setDataMatches] = useState([]);
   const [absFields, setAbsFields] = useState([]); // Define absFields state variable
+  const [jobStatuses, setJobStatuses] = useState([]);
+  const [selectedJobStatus, setSelectedJobStatus] = useState("");
 
   useEffect(() => {
+    fetchJobStatuses();
     fetchEngineers();
     fetchInstallers();
     fetchEpcRatings();
@@ -66,7 +69,14 @@ const PrivateJob = () => {
       console.error("Error fetching ABS fields:", error);
     }
   };
-
+  const fetchJobStatuses = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/job-statuses`);
+      setJobStatuses(response.data);
+    } catch (error) {
+      console.error("Error fetching job statuses:", error);
+    }
+  };
   const fetchDataMatches = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/datamatches`);
@@ -117,6 +127,7 @@ const PrivateJob = () => {
         jobname: jobName,
         joblead: jobLeads,
         jobaddress: jobAddress,
+        job_status: selectedJobStatus,
         measure: measure,
         job_starting_date: jobStartingDate,
         epc_rating: epcRating,
@@ -152,6 +163,10 @@ const PrivateJob = () => {
       setMeasure("");
       setEpcRating("");
       setAbsField("");
+      setLabourCost("");
+      setOtherExpense("");
+      setSelectedJobStatus("");
+      setMaterialCost("");
       setInsulationIntallerName("");
       setSelectedDataMatch("");
       setShowModal(true); // Show modal when job is inserted successfully
@@ -413,6 +428,21 @@ const PrivateJob = () => {
                         onChange={(e) => setMaterialCost(e.target.value)}
                         placeholder="Enter material cost"
                       />
+                    </div>
+                    <div className="mb-3">
+                      <CFormLabel htmlFor="jobStatus">Job Status</CFormLabel>
+                      <CFormSelect
+                        id="jobStatus"
+                        value={selectedJobStatus}
+                        onChange={(e) => setSelectedJobStatus(e.target.value)}
+                      >
+                        <option value="">Select Job Status</option>
+                        {jobStatuses.map((status) => (
+                          <option key={status.id} value={status.name}>
+                            {status.name}
+                          </option>
+                        ))}
+                      </CFormSelect>
                     </div>
                   </CForm>
                 </CCol>

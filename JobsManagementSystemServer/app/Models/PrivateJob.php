@@ -32,6 +32,7 @@ class PrivateJob extends Model
         'material_cost',
         'other_expense',
         'net_profit',
+        'job_status'
     ];
 
     public function assignedEngineer()

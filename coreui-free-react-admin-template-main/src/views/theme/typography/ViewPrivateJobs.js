@@ -26,11 +26,14 @@ const ViewPrivateJobs = () => {
   const [installers, setInstallers] = useState([]);
   const [dataMatches, setDataMatches] = useState([]);
   const [jobType, setJobType] = useState([]);
+  const [jobStatuses, setJobStatuses] = useState([]);
 
   const [epcRatings, setEpcRatings] = useState([]);
 
   useEffect(() => {
     fetchEngineers();
+    fetchJobStatuses();
+
     fetchInstallers();
     fetchEpcRatings();
     fetchJobTypes();
@@ -41,6 +44,14 @@ const ViewPrivateJobs = () => {
       .then((data) => setJobs(data))
       .catch((error) => console.error("Error fetching job data:", error));
   }, []);
+  const fetchJobStatuses = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/job-statuses`);
+      setJobStatuses(response.data);
+    } catch (error) {
+      console.error("Error fetching job statuses:", error);
+    }
+  };
   const fetchAbsFields = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/abs-fields`);
@@ -123,6 +134,7 @@ const ViewPrivateJobs = () => {
       cost_of_job: job.cost_of_job,
       other_related_note: job.other_related_note,
       abs_field: job.abs_field,
+      job_status: job.job_status,
     });
   };
 
@@ -195,6 +207,9 @@ const ViewPrivateJobs = () => {
                 Job Name
               </CTableHeaderCell>
               <CTableHeaderCell style={{ paddingRight: "5rem" }}>
+                Job Status
+              </CTableHeaderCell>
+              <CTableHeaderCell style={{ paddingRight: "5rem" }}>
                 Job Lead
               </CTableHeaderCell>
               <CTableHeaderCell style={{ paddingRight: "5rem" }}>
@@ -244,6 +259,23 @@ const ViewPrivateJobs = () => {
                         }
                         onChange={(e) => handleInputChange(e, "jobname")}
                       />
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      {editableRow === job.id ? (
+                        <CFormSelect
+                          value={editedValues.job_status}
+                          onChange={(e) => handleInputChange(e, "job_status")}
+                        >
+                          <option value="">Select Job Type</option>
+                          {jobStatuses.map((status) => (
+                            <option key={status.id} value={status.name}>
+                              {status.name}
+                            </option>
+                          ))}
+                        </CFormSelect>
+                      ) : (
+                        job.job_type
+                      )}
                     </CTableDataCell>
                     <CTableDataCell>
                       <CFormInput
@@ -417,6 +449,7 @@ const ViewPrivateJobs = () => {
                 ) : (
                   <>
                     <CTableDataCell>{job.jobname}</CTableDataCell>
+                    <CTableDataCell>{job.job_status}</CTableDataCell>
                     <CTableDataCell>{job.joblead}</CTableDataCell>
                     <CTableDataCell>{job.jobaddress}</CTableDataCell>
                     <CTableDataCell>{job.job_starting_date}</CTableDataCell>
