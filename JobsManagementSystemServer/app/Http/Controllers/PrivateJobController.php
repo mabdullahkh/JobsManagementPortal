@@ -24,23 +24,23 @@ class PrivateJobController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'jobname' => 'required|string|max:255',
-            'joblead' => 'required|string|max:255',
-            'jobaddress' => 'required|string|max:255',
-            'measure' => 'required|string|max:255',
-            'job_starting_date' => 'required|date',
-            'epc_rating' => 'required|string|max:255',
-            'expected_ending_date' => 'required|date',
-            'assigned_engineer_id' => 'required|string|max:255',
-            'insulation_installer_id' => 'required|string|max:255',
-            'cost_of_job' => 'required|numeric',
-            'data_match' => 'required|string|max:255',
+            'jobname' => 'nullable|string|max:255',
+            'joblead' => 'nullable|string|max:255',
+            'jobaddress' => 'nullable|string|max:255',
+            'measure' => 'nullable|string|max:255',
+            'job_starting_date' => 'nullable|date',
+            'epc_rating' => 'nullable|string|max:255',
+            'expected_ending_date' => 'nullable|date',
+            'assigned_engineer_id' => 'nullable|string|max:255',
+            'insulation_installer_id' => 'nullable|string|max:255',
+            'cost_of_job' => 'nullable|numeric',
+            'data_match' => 'nullable|string|max:255',
             'other_related_note' => 'nullable|string|max:255',
             'abs_field' => 'nullable|string|max:255',
             'job_type' => 'nullable|string|max:255',
-            'labour_cost' => 'required|numeric',
-            'material_cost' => 'required|numeric',
-            'other_expense' => 'required|numeric',
+            'labour_cost' => 'nullable|numeric',
+            'material_cost' => 'nullable|numeric',
+            'other_expense' => 'nullable|numeric',
         ]);
         $netProfit = ($request->labour_cost + $request->material_cost + $request->other_expense) - $request->cost_of_job;
     
