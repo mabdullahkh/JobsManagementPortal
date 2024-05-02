@@ -123,18 +123,18 @@ const ViewPrivateJobs = () => {
     setEditableRow(id);
     // Set the editedValues state to the values of the job being edited
     setEditedValues({
-      jobname: job.jobname,
-      joblead: job.joblead,
-      jobaddress: job.jobaddress,
-      job_starting_date: job.job_starting_date,
-      job_type: job.job_type,
-      expected_ending_date: job.expected_ending_date,
-      assigned_engineer_name: job.assigned_engineer.name,
-      insulation_installer_name: job.insulation_installer.name,
-      cost_of_job: job.cost_of_job,
-      other_related_note: job.other_related_note,
-      abs_field: job.abs_field,
-      job_status: job.job_status,
+      jobname: job.jobname || "",
+      joblead: job.joblead || "",
+      jobaddress: job.jobaddress || "",
+      job_starting_date: job.job_starting_date || null,
+      job_type: job.job_type || "",
+      expected_ending_date: job.expected_ending_date || null,
+      assigned_engineer_name: job.assigned_engineer?.name || "",
+      insulation_installer_name: job.insulation_installer?.name || "",
+      cost_of_job: job.cost_of_job || 0,
+      other_related_note: job.other_related_note || "",
+      abs_field: job.abs_field || "",
+      job_status: job.job_status || "",
     });
   };
 
