@@ -253,13 +253,13 @@ const PrivateJob = () => {
                       </CFormSelect>
                     </div>
                     <div className="mb-3">
-                      <CFormLabel htmlFor="jobCost">Cost of Job</CFormLabel>
+                      <CFormLabel htmlFor="jobCost">Our Cost</CFormLabel>
                       <CFormInput
                         type="number"
                         id="costOfJob"
                         value={costOfJob}
                         onChange={(e) => setCostOfJob(e.target.value)}
-                        placeholder="Enter cost of job"
+                        placeholder="Enter Our Cost"
                       />
                     </div>
                     <div className="mb-3">
@@ -272,18 +272,6 @@ const PrivateJob = () => {
                         value={otherRelatedNotes}
                         onChange={(e) => setOtherRelatedNotes(e.target.value)}
                         placeholder="Enter Other Related Note"
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <CFormLabel htmlFor="materialCost">
-                        Material Cost
-                      </CFormLabel>
-                      <CFormInput
-                        type="number"
-                        id="materialCost"
-                        value={materialCost}
-                        onChange={(e) => setMaterialCost(e.target.value)}
-                        placeholder="Enter material cost"
                       />
                     </div>
 
@@ -304,7 +292,7 @@ const PrivateJob = () => {
                         placeholder="Enter job lead"
                       />
                     </div>
-                    <div className="mb-3">
+                    {/* <div className="mb-3">
                       <CFormLabel htmlFor="Measure">Measure</CFormLabel>
                       <CFormInput
                         type="text"
@@ -313,8 +301,8 @@ const PrivateJob = () => {
                         onChange={(e) => setMeasure(e.target.value)}
                         placeholder="Enter Measures"
                       />
-                    </div>
-                    <div className="mb-3">
+                    </div> */}
+                    {/* <div className="mb-3">
                       <CFormLabel htmlFor="epcRating">EPC Rating</CFormLabel>
                       <CFormSelect
                         id="epcRating"
@@ -327,7 +315,7 @@ const PrivateJob = () => {
                           </option>
                         ))}
                       </CFormSelect>
-                    </div>
+                    </div> */}
 
                     <div className="mb-3">
                       <CFormLabel htmlFor="absField">ABS Field</CFormLabel>
@@ -367,7 +355,7 @@ const PrivateJob = () => {
                         ))}
                       </CFormSelect>
                     </div>
-                    <div className="mb-3">
+                    {/* <div className="mb-3">
                       <CFormLabel htmlFor="dataMatch">Data Match</CFormLabel>
                       <CFormSelect
                         id="dataMatch"
@@ -381,7 +369,7 @@ const PrivateJob = () => {
                           </option>
                         ))}
                       </CFormSelect>
-                    </div>
+                    </div> */}
                     <div className="mb-3">
                       <CFormLabel htmlFor="jobEvidence">
                         Job Evidence (PDFs and Pictures)
@@ -412,6 +400,18 @@ const PrivateJob = () => {
                         value={otherExpense}
                         onChange={(e) => setOtherExpense(e.target.value)}
                         placeholder="Enter other expense"
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <CFormLabel htmlFor="materialCost">
+                        Material Cost
+                      </CFormLabel>
+                      <CFormInput
+                        type="number"
+                        id="materialCost"
+                        value={materialCost}
+                        onChange={(e) => setMaterialCost(e.target.value)}
+                        placeholder="Enter material cost"
                       />
                     </div>
                   </CForm>
