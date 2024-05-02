@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BASE_URL from "src/Config";
+import axios from "axios";
+
 import {
   CButton,
   CFormInput,
@@ -12,20 +14,92 @@ import {
   CTableRow,
   CTableHeaderCell,
   CTableDataCell,
+  CFormSelect,
 } from "@coreui/react";
 
 const ViewJobs = () => {
   const [jobs, setJobs] = useState([]);
   const [editableRow, setEditableRow] = useState(null);
   const [editedValues, setEditedValues] = useState({});
+  const [absFields, setAbsFields] = useState([]); // Define absFields state variable
+  const [engineers, setEngineers] = useState([]);
+  const [installers, setInstallers] = useState([]);
+  const [dataMatches, setDataMatches] = useState([]);
+  const [jobType, setJobType] = useState([]);
+  const [epcRatings, setEpcRatings] = useState([]);
+  const [jobStatuses, setJobStatuses] = useState([]);
 
   useEffect(() => {
+    fetchJobStatuses();
+    fetchEngineers();
+    fetchInstallers();
+    fetchEpcRatings();
+    fetchJobTypes();
+    fetchDataMatches();
+    fetchAbsFields();
     fetch(`${BASE_URL}/allec04`)
       .then((response) => response.json())
       .then((data) => setJobs(data))
       .catch((error) => console.error("Error fetching job data:", error));
   }, []);
+  const fetchJobStatuses = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/job-statuses`);
+      setJobStatuses(response.data);
+    } catch (error) {
+      console.error("Error fetching job statuses:", error);
+    }
+  };
+  const fetchAbsFields = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/abs-fields`);
+      setAbsFields(response.data);
+    } catch (error) {
+      console.error("Error fetching ABS fields:", error);
+    }
+  };
 
+  const fetchDataMatches = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/datamatches`);
+      setDataMatches(response.data);
+    } catch (error) {
+      console.error("Error fetching data matches:", error);
+    }
+  };
+  const fetchEngineers = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/allengineers`);
+      setEngineers(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching engineers:", error);
+    }
+  };
+  const fetchInstallers = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/allinstallers`);
+      setInstallers(response.data);
+    } catch (error) {
+      console.error("Error fetching installers:", error);
+    }
+  };
+  const fetchEpcRatings = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/epc-ratings`);
+      setEpcRatings(response.data);
+    } catch (error) {
+      console.error("Error fetching EPC ratings:", error);
+    }
+  };
+  const fetchJobTypes = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/job-types`);
+      setJobType(response.data);
+    } catch (error) {
+      console.error("Error fetching EPC ratings:", error);
+    }
+  };
   const handleDelete = (id) => {
     fetch(`${BASE_URL}/allec04/${id}`, {
       method: "DELETE",
@@ -43,8 +117,30 @@ const ViewJobs = () => {
       .catch((error) => console.error("Error deleting job:", error));
   };
 
-  const handleEdit = (id) => {
+  const handleEdit = (id, job) => {
     setEditableRow(id);
+    // Set the editedValues state to the values of the job being edited
+    setEditedValues({
+      jobname: job.jobname,
+      joblead: job.joblead,
+      jobaddress: job.jobaddress,
+      measure: job.measure,
+      epc_rating: job.epc_rating,
+      material_cost: job.material_cost,
+      other_expense: job.other_expense,
+      abs_rate: job.abs_rate,
+      net_profit: job.net_profit,
+      labour_cost: job.labour_cost,
+      job_starting_date: job.job_starting_date,
+      job_type: job.job_type,
+      expected_ending_date: job.expected_ending_date,
+      assigned_engineer_name: job.assigned_engineer.name,
+      insulation_installer_name: job.insulation_installer.name,
+      cost_of_job: job.cost_of_job,
+      other_related_note: job.other_related_note,
+      abs_field: job.abs_field,
+      job_status: job.job_status,
+    });
   };
 
   const handleUpdate = (id) => {
@@ -86,12 +182,24 @@ const ViewJobs = () => {
   };
 
   const handleInputChange = (e, fieldName) => {
-    setEditedValues({
-      ...editedValues,
-      [fieldName]: e.target.value,
-    });
+    const value = e.target.value;
+    // If the field name contains dot notation, handle nested object properties
+    if (fieldName.includes(".")) {
+      const [objectKey, nestedKey] = fieldName.split(".");
+      setEditedValues((prevState) => ({
+        ...prevState,
+        [objectKey]: {
+          ...prevState[objectKey],
+          [nestedKey]: value,
+        },
+      }));
+    } else {
+      setEditedValues({
+        ...editedValues,
+        [fieldName]: value,
+      });
+    }
   };
-
   return (
     <>
       <div style={{ overflowX: "auto" }}>
@@ -101,6 +209,9 @@ const ViewJobs = () => {
             <CTableRow>
               <CTableHeaderCell style={{ paddingRight: "5rem" }}>
                 Job Name
+              </CTableHeaderCell>
+              <CTableHeaderCell style={{ paddingRight: "5rem" }}>
+                Job Status
               </CTableHeaderCell>
               <CTableHeaderCell style={{ paddingRight: "5rem" }}>
                 Job Lead
@@ -153,7 +264,7 @@ const ViewJobs = () => {
               <CTableHeaderCell style={{ paddingRight: "5rem" }}>
                 Other Related Note
               </CTableHeaderCell>
-              <CTableHeaderCell style={{ paddingRight: "5rem" }}>
+              <CTableHeaderCell style={{ paddingRight: "17rem" }}>
                 Abs Field
               </CTableHeaderCell>
               <CTableHeaderCell style={{ paddingRight: "5rem" }}>
@@ -169,28 +280,62 @@ const ViewJobs = () => {
                     <CTableDataCell>
                       <CFormInput
                         type="text"
-                        value={editedValues.jobname || job.jobname}
+                        value={
+                          editableRow === job.id
+                            ? editedValues.jobname
+                            : job.jobname
+                        }
                         onChange={(e) => handleInputChange(e, "jobname")}
                       />
                     </CTableDataCell>
                     <CTableDataCell>
+                      {editableRow === job.id ? (
+                        <CFormSelect
+                          value={editedValues.job_status}
+                          onChange={(e) => handleInputChange(e, "job_status")}
+                        >
+                          <option value="">Select Job Type</option>
+                          {jobStatuses.map((status) => (
+                            <option key={status.id} value={status.name}>
+                              {status.name}
+                            </option>
+                          ))}
+                        </CFormSelect>
+                      ) : (
+                        job.job_type
+                      )}
+                    </CTableDataCell>
+
+                    <CTableDataCell>
                       <CFormInput
                         type="text"
-                        value={editedValues.joblead || job.joblead}
+                        value={
+                          editableRow === job.id
+                            ? editedValues.joblead
+                            : job.joblead
+                        }
                         onChange={(e) => handleInputChange(e, "joblead")}
                       />
                     </CTableDataCell>
                     <CTableDataCell>
                       <CFormInput
                         type="text"
-                        value={editedValues.jobaddress || job.jobaddress}
+                        value={
+                          editableRow === job.id
+                            ? editedValues.jobaddress
+                            : job.jobaddress
+                        }
                         onChange={(e) => handleInputChange(e, "jobaddress")}
                       />
                     </CTableDataCell>
                     <CTableDataCell>
                       <CFormInput
                         type="text"
-                        value={editedValues.measure || job.measure}
+                        value={
+                          editableRow === job.id
+                            ? editedValues.measure
+                            : job.measure
+                        }
                         onChange={(e) => handleInputChange(e, "measure")}
                       />
                     </CTableDataCell>
@@ -198,8 +343,9 @@ const ViewJobs = () => {
                       <CFormInput
                         type="date"
                         value={
-                          editedValues.job_starting_date ||
-                          job.job_starting_date
+                          editableRow === job.id
+                            ? editedValues.job_starting_date
+                            : job.job_starting_date
                         }
                         onChange={(e) =>
                           handleInputChange(e, "job_starting_date")
@@ -207,25 +353,47 @@ const ViewJobs = () => {
                       />
                     </CTableDataCell>
                     <CTableDataCell>
-                      <CFormInput
-                        type="text"
-                        value={editedValues.epc_rating || job.epc_rating}
-                        onChange={(e) => handleInputChange(e, "epc_rating")}
-                      />
+                      {editableRow === job.id ? (
+                        <CFormSelect
+                          value={editedValues.epc_rating}
+                          onChange={(e) => handleInputChange(e, "epc_rating")}
+                        >
+                          <option value="">Select Job Type</option>
+                          {epcRatings.map((rating) => (
+                            <option key={rating.id} value={rating.name}>
+                              {rating.name}
+                            </option>
+                          ))}
+                        </CFormSelect>
+                      ) : (
+                        job.job_type
+                      )}
                     </CTableDataCell>
+
                     <CTableDataCell>
-                      <CFormInput
-                        type="text"
-                        value={editedValues.job_type || job.job_type}
-                        onChange={(e) => handleInputChange(e, "job_type")}
-                      />
+                      {editableRow === job.id ? (
+                        <CFormSelect
+                          value={editedValues.job_type}
+                          onChange={(e) => handleInputChange(e, "job_type")}
+                        >
+                          <option value="">Select Job Type</option>
+                          {jobType.map((type) => (
+                            <option key={type.id} value={type.name}>
+                              {type.name}
+                            </option>
+                          ))}
+                        </CFormSelect>
+                      ) : (
+                        job.job_type
+                      )}
                     </CTableDataCell>
                     <CTableDataCell>
                       <CFormInput
                         type="date"
                         value={
-                          editedValues.expected_ending_date ||
-                          job.expected_ending_date
+                          editableRow === job.id
+                            ? editedValues.expected_ending_date
+                            : job.expected_ending_date
                         }
                         onChange={(e) =>
                           handleInputChange(e, "expected_ending_date")
@@ -233,78 +401,134 @@ const ViewJobs = () => {
                       />
                     </CTableDataCell>
                     <CTableDataCell>
-                      <CFormInput
-                        type="text"
-                        value={job.assigned_engineer.name}
-                        onChange={(e) =>
-                          handleInputChange(e, "assigned_engineer.name")
-                        }
-                      />
+                      {editableRow === job.id ? (
+                        <CFormSelect
+                          value={editedValues.assigned_engineer_name}
+                          onChange={(e) =>
+                            handleInputChange(e, "assigned_engineer.name")
+                          }
+                        >
+                          <option value="">Select Engineer</option>
+                          {engineers.map((engineer) => (
+                            <option key={engineer.id} value={engineer.name}>
+                              {engineer.name}
+                            </option>
+                          ))}
+                        </CFormSelect>
+                      ) : (
+                        job.assigned_engineer_name
+                      )}
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      {editableRow === job.id ? (
+                        <CFormSelect
+                          value={editedValues.insulation_installer_name}
+                          onChange={(e) =>
+                            handleInputChange(e, "insulation_installer.name")
+                          }
+                        >
+                          <option value="">Select Installer</option>
+                          {installers.map((installer) => (
+                            <option key={installer.id} value={installer.name}>
+                              {installer.name}
+                            </option>
+                          ))}
+                        </CFormSelect>
+                      ) : (
+                        job.insulation_installer_name
+                      )}
                     </CTableDataCell>
                     <CTableDataCell>
                       <CFormInput
                         type="text"
-                        value={job.insulation_installer.name}
-                        onChange={(e) =>
-                          handleInputChange(e, "insulation_installer.name")
+                        value={
+                          editableRow === job.id
+                            ? editedValues.cost_of_job
+                            : job.cost_of_job
                         }
-                      />
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      <CFormInput
-                        type="text"
-                        value={editedValues.cost_of_job || job.cost_of_job}
                         onChange={(e) => handleInputChange(e, "cost_of_job")}
                       />
                     </CTableDataCell>
                     <CTableDataCell>
                       <CFormInput
                         type="text"
-                        value={editedValues.labour_cost || job.labour_cost}
+                        value={
+                          editableRow === job.id
+                            ? editedValues.labour_cost
+                            : job.labour_cost
+                        }
                         onChange={(e) => handleInputChange(e, "labour_cost")}
                       />
                     </CTableDataCell>
                     <CTableDataCell>
                       <CFormInput
                         type="text"
-                        value={editedValues.material_cost || job.material_cost}
+                        value={
+                          editableRow === job.id
+                            ? editedValues.material_cost
+                            : job.material_cost
+                        }
                         onChange={(e) => handleInputChange(e, "material_cost")}
                       />
                     </CTableDataCell>
                     <CTableDataCell>
                       <CFormInput
                         type="text"
-                        value={editedValues.other_expense || job.other_expense}
+                        value={
+                          editableRow === job.id
+                            ? editedValues.other_expense
+                            : job.other_expense
+                        }
                         onChange={(e) => handleInputChange(e, "other_expense")}
                       />
                     </CTableDataCell>
                     <CTableDataCell>
                       <CFormInput
                         type="text"
-                        value={editedValues.abs_rate || job.abs_rate}
+                        value={
+                          editableRow === job.id
+                            ? editedValues.abs_rate
+                            : job.abs_rate
+                        }
                         onChange={(e) => handleInputChange(e, "abs_rate")}
                       />
                     </CTableDataCell>
                     <CTableDataCell>
                       <CFormInput
                         type="text"
-                        value={editedValues.net_profit || job.net_profit}
+                        value={
+                          editableRow === job.id
+                            ? editedValues.net_profit
+                            : job.net_profit
+                        }
                         onChange={(e) => handleInputChange(e, "net_profit")}
                       />
                     </CTableDataCell>
                     <CTableDataCell>
-                      <CFormInput
-                        type="text"
-                        value={editedValues.data_match || job.data_match}
-                        onChange={(e) => handleInputChange(e, "data_match")}
-                      />
-                    </CTableDataCell>{" "}
+                      {editableRow === job.id ? (
+                        <CFormSelect
+                          value={editedValues.data_match}
+                          onChange={(e) => handleInputChange(e, "data_match")}
+                        >
+                          <option value="">Data Match</option>
+                          {dataMatches.map((datamatch) => (
+                            <option key={datamatch.id} value={datamatch.name}>
+                              {datamatch.name}
+                            </option>
+                          ))}
+                        </CFormSelect>
+                      ) : (
+                        job.data_match
+                      )}
+                    </CTableDataCell>
+
                     <CTableDataCell>
                       <CFormInput
                         type="text"
                         value={
-                          editedValues.other_related_note ||
-                          job.other_related_note
+                          editableRow === job.id
+                            ? editedValues.other_related_note
+                            : job.other_related_note
                         }
                         onChange={(e) =>
                           handleInputChange(e, "other_related_note")
@@ -312,11 +536,29 @@ const ViewJobs = () => {
                       />
                     </CTableDataCell>
                     <CTableDataCell>
-                      <CFormInput
-                        type="text"
-                        value={editedValues.abs_field || job.abs_field}
-                        onChange={(e) => handleInputChange(e, "abs_field")}
-                      />
+                      {editableRow === job.id ? (
+                        <CFormSelect
+                          value={
+                            editableRow === job.id
+                              ? editedValues.abs_field
+                              : job.abs_field
+                          }
+                          onChange={(e) => handleInputChange(e, "abs_field")}
+                        >
+                          <option value="">Select ABS Field</option>
+                          {absFields.map((abs) => (
+                            <option
+                              key={abs.id}
+                              value={`${abs.floor_area_segment} - ${abs.starting_band} to ${abs.finishing_band}`}
+                            >
+                              {abs.floor_area_segment} - {abs.starting_band} to{" "}
+                              {abs.finishing_band} is {abs.cost_savings}
+                            </option>
+                          ))}
+                        </CFormSelect>
+                      ) : (
+                        job.abs_field
+                      )}
                     </CTableDataCell>
                     {/* Add input fields for other editable columns */}
                     <CTableDataCell>
@@ -334,6 +576,7 @@ const ViewJobs = () => {
                 ) : (
                   <>
                     <CTableDataCell>{job.jobname}</CTableDataCell>
+                    <CTableDataCell>{job.job_status}</CTableDataCell>
                     <CTableDataCell>{job.joblead}</CTableDataCell>
                     <CTableDataCell>{job.jobaddress}</CTableDataCell>
                     <CTableDataCell>{job.measure}</CTableDataCell>
@@ -361,7 +604,10 @@ const ViewJobs = () => {
                     <CTableDataCell>{job.other_related_note}</CTableDataCell>
                     <CTableDataCell>{job.abs_field}</CTableDataCell>
                     <CTableDataCell>
-                      <CButton color="info" onClick={() => handleEdit(job.id)}>
+                      <CButton
+                        color="info"
+                        onClick={() => handleEdit(job.id, job)}
+                      >
                         Edit
                       </CButton>
                       <CButton

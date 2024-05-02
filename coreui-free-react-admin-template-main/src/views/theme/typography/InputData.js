@@ -33,6 +33,7 @@ const InputData = () => {
   const [otherRelatedNotes, setOtherRelatedNotes] = useState("");
   const [jobLeads, setJobLeads] = useState("");
   const [measure, setMeasure] = useState("");
+  const [selectedJobStatus, setSelectedJobStatus] = useState("");
   const [epcRating, setEpcRating] = useState("");
   const [absField, setAbsField] = useState("");
   const [insulationIntallerName, setInsulationIntallerName] = useState("");
@@ -49,8 +50,10 @@ const InputData = () => {
   const [selectedDataMatch, setSelectedDataMatch] = useState("");
   const [dataMatches, setDataMatches] = useState([]);
   const [absFields, setAbsFields] = useState([]); // Define absFields state variable
+  const [jobStatuses, setJobStatuses] = useState([]);
 
   useEffect(() => {
+    fetchJobStatuses();
     fetchEngineers();
     fetchInstallers();
     fetchEpcRatings();
@@ -67,7 +70,14 @@ const InputData = () => {
       console.error("Error fetching ABS fields:", error);
     }
   };
-
+  const fetchJobStatuses = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/job-statuses`);
+      setJobStatuses(response.data);
+    } catch (error) {
+      console.error("Error fetching job statuses:", error);
+    }
+  };
   const fetchDataMatches = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/datamatches`);
@@ -122,6 +132,7 @@ const InputData = () => {
           parseFloat(otherExpense));
       const response = await axios.post(`${BASE_URL}/ec04`, {
         jobname: jobName,
+        job_status: selectedJobStatus,
         joblead: jobLeads,
         jobaddress: jobAddress,
         measure: measure,
@@ -350,7 +361,10 @@ const InputData = () => {
                       >
                         <option value="">Select ABS Field</option>
                         {absFields.map((abs) => (
-                          <option key={abs.id} value={abs.cost_savings}>
+                          <option
+                            key={abs.id}
+                            value={`${abs.floor_area_segment} - ${abs.starting_band} to ${abs.finishing_band}`}
+                          >
                             {abs.floor_area_segment} - {abs.starting_band} to{" "}
                             {abs.finishing_band} is {abs.cost_savings}
                           </option>
@@ -423,6 +437,21 @@ const InputData = () => {
                         onChange={(e) => setMaterialCost(e.target.value)}
                         placeholder="Enter material cost"
                       />
+                    </div>
+                    <div className="mb-3">
+                      <CFormLabel htmlFor="jobStatus">Job Status</CFormLabel>
+                      <CFormSelect
+                        id="jobStatus"
+                        value={selectedJobStatus}
+                        onChange={(e) => setSelectedJobStatus(e.target.value)}
+                      >
+                        <option value="">Select Job Status</option>
+                        {jobStatuses.map((status) => (
+                          <option key={status.id} value={status.name}>
+                            {status.name}
+                          </option>
+                        ))}
+                      </CFormSelect>
                     </div>
                     {/* Other Expense */}
                   </CForm>

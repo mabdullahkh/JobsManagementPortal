@@ -32,7 +32,9 @@ class EC04 extends Model
         'material_cost',
         'other_expense',
         'net_profit',
-        'abs_rate'
+        'abs_rate',
+        'job_status'
+
     ];
 
     public function assignedEngineer()
