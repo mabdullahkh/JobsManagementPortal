@@ -547,10 +547,7 @@ const ViewJobs = () => {
                         >
                           <option value="">Select ABS Field</option>
                           {absFields.map((abs) => (
-                            <option
-                              key={abs.id}
-                              value={`${abs.floor_area_segment} - ${abs.starting_band} to ${abs.finishing_band}`}
-                            >
+                            <option key={abs.id} value={abs.cost_savings}>
                               {abs.floor_area_segment} - {abs.starting_band} to{" "}
                               {abs.finishing_band} is {abs.cost_savings}
                             </option>

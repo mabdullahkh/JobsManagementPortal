@@ -134,6 +134,11 @@ const ViewPrivateJobs = () => {
       cost_of_job: job.cost_of_job || 0,
       other_related_note: job.other_related_note || "",
       abs_field: job.abs_field || "",
+      net_profit: job.net_profit || "",
+      material_cost: job.material_cost || "",
+      labour_cost: job.labour_cost || "",
+      other_expense: job.other_expense || "",
+
       job_status: job.job_status || "",
     });
   };
@@ -231,10 +236,22 @@ const ViewPrivateJobs = () => {
                 Insulation Installer
               </CTableHeaderCell>
               <CTableHeaderCell style={{ paddingRight: "5rem" }}>
-                Cost of Job
+                Our Cost
               </CTableHeaderCell>
               <CTableHeaderCell style={{ paddingRight: "5rem" }}>
                 Other Related Note
+              </CTableHeaderCell>
+              <CTableHeaderCell style={{ paddingRight: "5rem" }}>
+                Labour Cost
+              </CTableHeaderCell>{" "}
+              <CTableHeaderCell style={{ paddingRight: "5rem" }}>
+                Material Cost
+              </CTableHeaderCell>{" "}
+              <CTableHeaderCell style={{ paddingRight: "5rem" }}>
+                Other Expense
+              </CTableHeaderCell>
+              <CTableHeaderCell style={{ paddingRight: "5rem" }}>
+                Net Profit
               </CTableHeaderCell>
               <CTableHeaderCell style={{ paddingRight: "18rem" }}>
                 Abs Field
@@ -299,7 +316,6 @@ const ViewPrivateJobs = () => {
                         onChange={(e) => handleInputChange(e, "jobaddress")}
                       />
                     </CTableDataCell>
-
                     <CTableDataCell>
                       <CFormInput
                         type="date"
@@ -313,7 +329,6 @@ const ViewPrivateJobs = () => {
                         }
                       />
                     </CTableDataCell>
-
                     <CTableDataCell>
                       {editableRow === job.id ? (
                         <CFormSelect
@@ -382,7 +397,6 @@ const ViewPrivateJobs = () => {
                         job.insulation_installer_name
                       )}
                     </CTableDataCell>
-
                     <CTableDataCell>
                       <CFormInput
                         type="text"
@@ -394,7 +408,6 @@ const ViewPrivateJobs = () => {
                         onChange={(e) => handleInputChange(e, "cost_of_job")}
                       />
                     </CTableDataCell>
-
                     <CTableDataCell>
                       <CFormInput
                         type="text"
@@ -409,6 +422,47 @@ const ViewPrivateJobs = () => {
                       />
                     </CTableDataCell>
                     <CTableDataCell>
+                      <CFormInput
+                        type="text"
+                        value={
+                          editableRow === job.id
+                            ? editedValues.labour_cost
+                            : job.labour_cost
+                        }
+                      />
+                    </CTableDataCell>{" "}
+                    <CTableDataCell>
+                      <CFormInput
+                        type="text"
+                        value={
+                          editableRow === job.id
+                            ? editedValues.material_cost
+                            : job.material_cost
+                        }
+                      />
+                    </CTableDataCell>{" "}
+                    <CTableDataCell>
+                      <CFormInput
+                        type="text"
+                        value={
+                          editableRow === job.id
+                            ? editedValues.other_expense
+                            : job.other_expense
+                        }
+                      />
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      <CFormInput
+                        type="text"
+                        value={
+                          editableRow === job.id
+                            ? editedValues.other_related_note
+                            : job.other_related_note
+                        }
+                        readOnly
+                      />
+                    </CTableDataCell>
+                    <CTableDataCell>
                       {editableRow === job.id ? (
                         <CFormSelect
                           value={
@@ -420,10 +474,7 @@ const ViewPrivateJobs = () => {
                         >
                           <option value="">Select ABS Field</option>
                           {absFields.map((abs) => (
-                            <option
-                              key={abs.id}
-                              value={`${abs.floor_area_segment} - ${abs.starting_band} to ${abs.finishing_band}`}
-                            >
+                            <option key={abs.id} value={abs.cost_savings}>
                               {abs.floor_area_segment} - {abs.starting_band} to{" "}
                               {abs.finishing_band} is {abs.cost_savings}
                             </option>
@@ -468,6 +519,11 @@ const ViewPrivateJobs = () => {
                     </CTableDataCell>
                     <CTableDataCell>{job.cost_of_job}</CTableDataCell>
                     <CTableDataCell>{job.other_related_note}</CTableDataCell>
+                    <CTableDataCell>{job.labour_cost}</CTableDataCell>
+                    <CTableDataCell>{job.material_cost}</CTableDataCell>
+                    <CTableDataCell>{job.other_expense}</CTableDataCell>
+
+                    <CTableDataCell>{job.net_profit}</CTableDataCell>
                     <CTableDataCell>{job.abs_field}</CTableDataCell>
                     <CTableDataCell>
                       <CButton

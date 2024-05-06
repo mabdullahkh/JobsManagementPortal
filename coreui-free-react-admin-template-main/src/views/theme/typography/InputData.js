@@ -125,11 +125,23 @@ const InputData = () => {
   };
   const handleSubmit = async () => {
     try {
-      const calculatedNetProfit =
-        parseFloat(absRate) * parseFloat(absField) -
-        (parseFloat(labourCost) +
-          parseFloat(materialCost) +
-          parseFloat(otherExpense));
+      const absRateFloat = Math.abs(parseFloat(absRate));
+      const absFieldFloat = Math.abs(parseFloat(absField));
+      const labourCostFloat = Math.abs(parseFloat(labourCost));
+      const materialCostFloat = Math.abs(parseFloat(materialCost));
+      const otherExpenseFloat = Math.abs(parseFloat(otherExpense));
+
+      let calculatedNetProfit =
+        absRateFloat * absFieldFloat -
+        (labourCostFloat + materialCostFloat + otherExpenseFloat);
+
+      // If calculatedNetProfit is zero, set it to a small positive value
+      if (calculatedNetProfit === 0) {
+        calculatedNetProfit = Number.EPSILON;
+      }
+
+      // Ensure the calculatedNetProfit is positive
+      calculatedNetProfit = Math.abs(calculatedNetProfit);
       const response = await axios.post(`${BASE_URL}/ec04`, {
         jobname: jobName,
         job_status: selectedJobStatus,
@@ -361,10 +373,7 @@ const InputData = () => {
                       >
                         <option value="">Select ABS Field</option>
                         {absFields.map((abs) => (
-                          <option
-                            key={abs.id}
-                            value={`${abs.floor_area_segment} - ${abs.starting_band} to ${abs.finishing_band}`}
-                          >
+                          <option key={abs.id} value={abs.cost_savings}>
                             {abs.floor_area_segment} - {abs.starting_band} to{" "}
                             {abs.finishing_band} is {abs.cost_savings}
                           </option>

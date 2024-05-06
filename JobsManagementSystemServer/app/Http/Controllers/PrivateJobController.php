@@ -45,7 +45,7 @@ class PrivateJobController extends Controller
         ]);
         $netProfit = ($request->labour_cost + $request->material_cost + $request->other_expense) - $request->cost_of_job;
     
-        $validatedData['net_profit'] = $netProfit;
+        $validatedData['net_profit'] = abs($netProfit);
     
         $PrivateJob = PrivateJob::create($validatedData);
     
@@ -82,6 +82,9 @@ class PrivateJobController extends Controller
                 'abs_field' => 'nullable|string|max:255',
                 'job_type' => 'nullable|string|max:255',
             ]);
+            $netProfit = ($request->labour_cost + $request->material_cost + $request->other_expense) - $request->cost_of_job;
+    
+            $validatedData['net_profit'] = abs($netProfit);
     
             $job = PrivateJob::findOrFail($id);
            
