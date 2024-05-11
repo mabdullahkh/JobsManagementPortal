@@ -15,6 +15,8 @@ import {
   CTableHeaderCell,
   CTableDataCell,
   CFormSelect,
+  CPagination, // Import CPagination from @coreui/react
+  CPaginationItem,
 } from "@coreui/react";
 
 const ViewPrivateJobs = () => {
@@ -28,7 +30,17 @@ const ViewPrivateJobs = () => {
   const [jobType, setJobType] = useState([]);
   const [jobStatuses, setJobStatuses] = useState([]);
   const [updateTrigger, setUpdateTrigger] = useState(false); // State to trigger useEffect
+  const [filteredJobs, setFilteredJobs] = useState([]); // State for filtered jobs
+  const [searchKeyword, setSearchKeyword] = useState(""); // State for search keyword
+  const [currentPage, setCurrentPage] = useState(1);
 
+  const jobsPerPage = 10;
+  const indexOfLastJob = currentPage * jobsPerPage;
+  const indexOfFirstJob = indexOfLastJob - jobsPerPage;
+  const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const [epcRatings, setEpcRatings] = useState([]);
 
   useEffect(() => {
@@ -42,6 +54,29 @@ const ViewPrivateJobs = () => {
     fetchAbsFields();
     fetchPrivateJobs(); // Fetch private jobs initially
   }, [updateTrigger]);
+  useEffect(() => {
+    // Filter jobs based on searchKeyword
+    const filtered = jobs.filter(
+      (job) =>
+        (job.jobname || "")
+          .toLowerCase()
+          .includes((searchKeyword || "").toLowerCase()) ||
+        (job.job_status || "")
+          .toLowerCase()
+          .includes((searchKeyword || "").toLowerCase()) ||
+        (job.joblead || "")
+          .toLowerCase()
+          .includes((searchKeyword || "").toLowerCase()) ||
+        (job.jobaddress || "")
+          .toLowerCase()
+          .includes((searchKeyword || "").toLowerCase()) ||
+        (job.job_type || "")
+          .toLowerCase()
+          .includes((searchKeyword || "").toLowerCase())
+    );
+    setFilteredJobs(filtered);
+  }, [jobs, searchKeyword]);
+
   const fetchPrivateJobs = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/allprivatejob`);
@@ -224,10 +259,23 @@ const ViewPrivateJobs = () => {
       }
     }
   };
+  const handleSearch = (e) => {
+    setSearchKeyword(e.target.value);
+    setCurrentPage(1); // Reset page to 1 when searching
+    console.log("Search keyword:", e.target.value); // Log search keyword
+  };
 
   return (
     <>
       <div style={{ overflowX: "auto" }}>
+        <div className="mb-3">
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchKeyword}
+            onChange={handleSearch}
+          />
+        </div>
         <CTable>
           <CTableCaption>List of Jobs</CTableCaption>
           <CTableHead>
@@ -283,7 +331,7 @@ const ViewPrivateJobs = () => {
             </CTableRow>
           </CTableHead>
           <CTableBody>
-            {jobs.map((job) => (
+            {currentJobs.map((job) => (
               <CTableRow key={job.id}>
                 {editableRow === job.id ? (
                   <>
@@ -567,6 +615,38 @@ const ViewPrivateJobs = () => {
             ))}
           </CTableBody>
         </CTable>
+        {filteredJobs.length > jobsPerPage && (
+          <div className="d-flex justify-content-center">
+            <CPagination aria-label="Page navigation example">
+              <CPaginationItem
+                onClick={() => paginate(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </CPaginationItem>
+              {Array.from(
+                { length: Math.ceil(filteredJobs.length / jobsPerPage) },
+                (_, index) => index + 1
+              ).map((number) => (
+                <CPaginationItem
+                  key={number}
+                  onClick={() => paginate(number)}
+                  active={number === currentPage}
+                >
+                  {number}
+                </CPaginationItem>
+              ))}
+              <CPaginationItem
+                onClick={() => paginate(currentPage + 1)}
+                disabled={
+                  currentPage === Math.ceil(filteredJobs.length / jobsPerPage)
+                }
+              >
+                Next
+              </CPaginationItem>
+            </CPagination>
+          </div>
+        )}
         <ToastContainer />
       </div>
     </>
