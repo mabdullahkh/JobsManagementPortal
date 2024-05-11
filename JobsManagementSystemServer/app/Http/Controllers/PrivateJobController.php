@@ -77,7 +77,10 @@ class PrivateJobController extends Controller
                 'assigned_engineer_id' => 'nullable|string|max:255',
                 'insulation_installer_id' => 'nullable|string|max:255',
                 'cost_of_job' => 'nullable|numeric',
-                'data_match' => 'nullable|string|max:255',
+                'labour_cost' => 'nullable|numeric',
+                'material_cost' => 'nullable|numeric',
+                'other_expense' => 'nullable|numeric',
+                //'data_match' => 'nullable|string|max:255',
                 'other_related_note' => 'nullable|string|max:255',
                 'abs_field' => 'nullable|string|max:255',
                 'job_type' => 'nullable|string|max:255',
@@ -85,6 +88,7 @@ class PrivateJobController extends Controller
             $netProfit = ($request->labour_cost + $request->material_cost + $request->other_expense) - $request->cost_of_job;
     
             $validatedData['net_profit'] = abs($netProfit);
+            log::debug($validatedData);
     
             $job = PrivateJob::findOrFail($id);
            

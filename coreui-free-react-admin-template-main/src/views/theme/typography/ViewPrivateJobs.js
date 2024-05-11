@@ -27,6 +27,7 @@ const ViewPrivateJobs = () => {
   const [dataMatches, setDataMatches] = useState([]);
   const [jobType, setJobType] = useState([]);
   const [jobStatuses, setJobStatuses] = useState([]);
+  const [updateTrigger, setUpdateTrigger] = useState(false); // State to trigger useEffect
 
   const [epcRatings, setEpcRatings] = useState([]);
 
@@ -39,11 +40,16 @@ const ViewPrivateJobs = () => {
     fetchJobTypes();
     fetchDataMatches();
     fetchAbsFields();
-    fetch(`${BASE_URL}/allprivatejob`)
-      .then((response) => response.json())
-      .then((data) => setJobs(data))
-      .catch((error) => console.error("Error fetching job data:", error));
-  }, []);
+    fetchPrivateJobs(); // Fetch private jobs initially
+  }, [updateTrigger]);
+  const fetchPrivateJobs = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/allprivatejob`);
+      setJobs(response.data);
+    } catch (error) {
+      console.error("Error fetching private jobs:", error);
+    }
+  };
   const fetchJobStatuses = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/job-statuses`);
@@ -133,7 +139,6 @@ const ViewPrivateJobs = () => {
       insulation_installer_name: job.insulation_installer?.name || "",
       cost_of_job: job.cost_of_job || 0,
       other_related_note: job.other_related_note || "",
-      abs_field: job.abs_field || "",
       net_profit: job.net_profit || "",
       material_cost: job.material_cost || "",
       labour_cost: job.labour_cost || "",
@@ -168,6 +173,7 @@ const ViewPrivateJobs = () => {
           setEditableRow(null);
           // Show success message
           toast.success("Job updated successfully");
+          setUpdateTrigger(!updateTrigger);
         } else {
           console.error("Failed to update job");
           toast.error("Failed to update job");
@@ -252,9 +258,6 @@ const ViewPrivateJobs = () => {
               </CTableHeaderCell>
               <CTableHeaderCell style={{ paddingRight: "5rem" }}>
                 Net Profit
-              </CTableHeaderCell>
-              <CTableHeaderCell style={{ paddingRight: "18rem" }}>
-                Abs Field
               </CTableHeaderCell>
               <CTableHeaderCell style={{ paddingRight: "5rem" }}>
                 Actions
@@ -364,18 +367,18 @@ const ViewPrivateJobs = () => {
                         <CFormSelect
                           value={editedValues.assigned_engineer_name}
                           onChange={(e) =>
-                            handleInputChange(e, "assigned_engineer.name")
+                            handleInputChange(e, "assigned_engineer_id")
                           }
                         >
                           <option value="">Select Engineer</option>
                           {engineers.map((engineer) => (
-                            <option key={engineer.id} value={engineer.name}>
+                            <option key={engineer.id} value={engineer.id}>
                               {engineer.name}
                             </option>
                           ))}
                         </CFormSelect>
                       ) : (
-                        job.assigned_engineer_name
+                        job.assigned_engineer.name
                       )}
                     </CTableDataCell>
                     <CTableDataCell>
@@ -383,12 +386,12 @@ const ViewPrivateJobs = () => {
                         <CFormSelect
                           value={editedValues.insulation_installer_name}
                           onChange={(e) =>
-                            handleInputChange(e, "insulation_installer.name")
+                            handleInputChange(e, "insulation_installer_id")
                           }
                         >
                           <option value="">Select Installer</option>
                           {installers.map((installer) => (
-                            <option key={installer.id} value={installer.name}>
+                            <option key={installer.id} value={installer.id}>
                               {installer.name}
                             </option>
                           ))}
@@ -429,6 +432,7 @@ const ViewPrivateJobs = () => {
                             ? editedValues.labour_cost
                             : job.labour_cost
                         }
+                        onChange={(e) => handleInputChange(e, "labour_cost")}
                       />
                     </CTableDataCell>{" "}
                     <CTableDataCell>
@@ -439,6 +443,7 @@ const ViewPrivateJobs = () => {
                             ? editedValues.material_cost
                             : job.material_cost
                         }
+                        onChange={(e) => handleInputChange(e, "material_cost")}
                       />
                     </CTableDataCell>{" "}
                     <CTableDataCell>
@@ -449,6 +454,7 @@ const ViewPrivateJobs = () => {
                             ? editedValues.other_expense
                             : job.other_expense
                         }
+                        onChange={(e) => handleInputChange(e, "other_expense")}
                       />
                     </CTableDataCell>
                     <CTableDataCell>
@@ -456,13 +462,13 @@ const ViewPrivateJobs = () => {
                         type="text"
                         value={
                           editableRow === job.id
-                            ? editedValues.other_related_note
-                            : job.other_related_note
+                            ? editedValues.net_profit
+                            : job.net_profit
                         }
                         readOnly
                       />
                     </CTableDataCell>
-                    <CTableDataCell>
+                    {/* <CTableDataCell>
                       {editableRow === job.id ? (
                         <CFormSelect
                           value={
@@ -483,7 +489,7 @@ const ViewPrivateJobs = () => {
                       ) : (
                         job.abs_field
                       )}
-                    </CTableDataCell>
+                    </CTableDataCell> */}
                     {/* Add input fields for other editable columns */}
                     <CTableDataCell>
                       <CButton
@@ -522,9 +528,7 @@ const ViewPrivateJobs = () => {
                     <CTableDataCell>{job.labour_cost}</CTableDataCell>
                     <CTableDataCell>{job.material_cost}</CTableDataCell>
                     <CTableDataCell>{job.other_expense}</CTableDataCell>
-
                     <CTableDataCell>{job.net_profit}</CTableDataCell>
-                    <CTableDataCell>{job.abs_field}</CTableDataCell>
                     <CTableDataCell>
                       <CButton
                         color="info"
