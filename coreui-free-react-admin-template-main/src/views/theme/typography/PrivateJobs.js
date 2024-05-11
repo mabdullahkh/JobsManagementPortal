@@ -137,7 +137,6 @@ const PrivateJob = () => {
         cost_of_job: costOfJob,
         data_match: selectedDataMatch,
         other_related_note: otherRelatedNotes,
-        abs_field: absField,
         job_type: jobTypeName,
         labour_cost: labourCost,
         material_cost: materialCost,
@@ -332,7 +331,7 @@ const PrivateJob = () => {
                       </CFormSelect>
                     </div> */}
 
-                    <div className="mb-3">
+                    {/*<div className="mb-3">
                       <CFormLabel htmlFor="absField">ABS Field</CFormLabel>
                       <CFormSelect
                         id="absField"
@@ -347,7 +346,7 @@ const PrivateJob = () => {
                           </option>
                         ))}
                       </CFormSelect>
-                    </div>
+                    </div> */}
                     <div className="mb-3">
                       <CFormLabel htmlFor="insulationInstaller">
                         Insulation Installer Name
