@@ -199,7 +199,53 @@ const ViewJobs = () => {
         [fieldName]: value,
       });
     }
+    // Update the assigned engineer name directly if the field name is "assigned_engineer_id"
+    if (fieldName === "assigned_engineer_id") {
+      const engineer = engineers.find((eng) => eng.id === value);
+      if (engineer) {
+        setEditedValues((prevState) => ({
+          ...prevState,
+          assigned_engineer_name: engineer.name,
+        }));
+      }
+    }
+    // Update the insulation installer name directly if the field name is "insulation_installer_id"
+    if (fieldName === "insulation_installer_id") {
+      const installer = installers.find((inst) => inst.id === value);
+      if (installer) {
+        setEditedValues((prevState) => ({
+          ...prevState,
+          insulation_installer_name: installer.name,
+        }));
+      }
+    }
+
+    // Calculate net profit based on provided formula
+    const absRateFloat = parseFloat(editedValues.abs_rate) || 0;
+    const absFieldFloat = parseFloat(editedValues.abs_field) || 0;
+    const labourCostFloat = parseFloat(editedValues.labour_cost) || 0;
+    const materialCostFloat = parseFloat(editedValues.material_cost) || 0;
+    const otherExpenseFloat = parseFloat(editedValues.other_expense) || 0;
+
+    let calculatedNetProfit =
+      absRateFloat * absFieldFloat -
+      (labourCostFloat + materialCostFloat + otherExpenseFloat);
+
+    // If calculatedNetProfit is zero, set it to a small positive value
+    if (calculatedNetProfit === 0) {
+      calculatedNetProfit = Number.EPSILON;
+    }
+
+    // Ensure the calculatedNetProfit is positive
+    calculatedNetProfit = Math.abs(calculatedNetProfit);
+
+    // Update the net profit field in editedValues
+    setEditedValues((prevState) => ({
+      ...prevState,
+      net_profit: calculatedNetProfit.toFixed(2), // Round to 2 decimal places
+    }));
   };
+
   return (
     <>
       <div style={{ overflowX: "auto" }}>
@@ -405,18 +451,18 @@ const ViewJobs = () => {
                         <CFormSelect
                           value={editedValues.assigned_engineer_name}
                           onChange={(e) =>
-                            handleInputChange(e, "assigned_engineer.name")
+                            handleInputChange(e, "assigned_engineer_id")
                           }
                         >
                           <option value="">Select Engineer</option>
                           {engineers.map((engineer) => (
-                            <option key={engineer.id} value={engineer.name}>
+                            <option key={engineer.id} value={engineer.id}>
                               {engineer.name}
                             </option>
                           ))}
                         </CFormSelect>
                       ) : (
-                        job.assigned_engineer_name
+                        job.assigned_engineer.name
                       )}
                     </CTableDataCell>
                     <CTableDataCell>
@@ -424,12 +470,12 @@ const ViewJobs = () => {
                         <CFormSelect
                           value={editedValues.insulation_installer_name}
                           onChange={(e) =>
-                            handleInputChange(e, "insulation_installer.name")
+                            handleInputChange(e, "insulation_installer_id")
                           }
                         >
                           <option value="">Select Installer</option>
                           {installers.map((installer) => (
-                            <option key={installer.id} value={installer.name}>
+                            <option key={installer.id} value={installer.id}>
                               {installer.name}
                             </option>
                           ))}

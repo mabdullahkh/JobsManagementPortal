@@ -37,11 +37,14 @@
     "react": "^18.2.0",
     "react-app-polyfill": "^3.0.0",
     "react-dom": "^18.2.0",
+    "react-paginate": "^8.2.0",
     "react-redux": "^8.1.1",
     "react-router-dom": "^6.14.0",
+    "react-table": "^7.8.0",
     "react-toastify": "^10.0.5",
     "redux": "4.2.1",
-    "simplebar-react": "^2.4.3"
+    "simplebar-react": "^2.4.3",
+    "use-table": "^0.0.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",

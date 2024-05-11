@@ -186,7 +186,6 @@ const ViewPrivateJobs = () => {
     setEditedValues({}); // Reset edited values
     setEditableRow(null); // Reset editable row on cancel
   };
-
   const handleInputChange = (e, fieldName) => {
     const value = e.target.value;
     // If the field name contains dot notation, handle nested object properties
@@ -204,6 +203,25 @@ const ViewPrivateJobs = () => {
         ...editedValues,
         [fieldName]: value,
       });
+    }
+    // Update the engineer name directly if the field name is "assigned_engineer_id"
+    if (fieldName === "assigned_engineer_id") {
+      const engineer = engineers.find((eng) => eng.id === value);
+      if (engineer) {
+        setEditedValues((prevState) => ({
+          ...prevState,
+          assigned_engineer_name: engineer.name,
+        }));
+      }
+    }
+    if (fieldName === "insulation_installer_id") {
+      const installer = installers.find((inst) => inst.id === value);
+      if (installer) {
+        setEditedValues((prevState) => ({
+          ...prevState,
+          insulation_installer_name: installer.name,
+        }));
+      }
     }
   };
 
