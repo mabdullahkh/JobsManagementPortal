@@ -223,6 +223,7 @@ const ViewPrivateJobs = () => {
   };
   const handleInputChange = (e, fieldName) => {
     const value = e.target.value;
+
     // If the field name contains dot notation, handle nested object properties
     if (fieldName.includes(".")) {
       const [objectKey, nestedKey] = fieldName.split(".");

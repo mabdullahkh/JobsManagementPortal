@@ -84,6 +84,8 @@ class PrivateJobController extends Controller
                 'other_related_note' => 'nullable|string|max:255',
                 'abs_field' => 'nullable|string|max:255',
                 'job_type' => 'nullable|string|max:255',
+                'job_status' => 'nullable|string|max:255',
+
             ]);
             $netProfit = ($request->labour_cost + $request->material_cost + $request->other_expense) - $request->cost_of_job;
     
