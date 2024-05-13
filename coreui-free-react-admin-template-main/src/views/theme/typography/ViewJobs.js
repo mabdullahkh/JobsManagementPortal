@@ -170,8 +170,8 @@ const ViewJobs = () => {
       job_starting_date: job.job_starting_date,
       job_type: job.job_type,
       expected_ending_date: job.expected_ending_date,
-      assigned_engineer_name: job.assigned_engineer.name,
-      insulation_installer_name: job.insulation_installer.name,
+      assigned_engineer_name: job.assigned_engineer?.name || "",
+      insulation_installer_name: job.insulation_installer?.name || "",
       cost_of_job: job.cost_of_job,
       other_related_note: job.other_related_note,
       abs_field: job.abs_field,
@@ -219,6 +219,7 @@ const ViewJobs = () => {
 
   const handleInputChange = (e, fieldName) => {
     const value = e.target.value;
+
     // If the field name contains dot notation, handle nested object properties
     if (fieldName.includes(".")) {
       const [objectKey, nestedKey] = fieldName.split(".");
@@ -230,11 +231,12 @@ const ViewJobs = () => {
         },
       }));
     } else {
-      setEditedValues({
-        ...editedValues,
+      setEditedValues((prevState) => ({
+        ...prevState,
         [fieldName]: value,
-      });
+      }));
     }
+
     // Update the assigned engineer name directly if the field name is "assigned_engineer_id"
     if (fieldName === "assigned_engineer_id") {
       const engineer = engineers.find((eng) => eng.id === value);
@@ -245,6 +247,7 @@ const ViewJobs = () => {
         }));
       }
     }
+
     // Update the insulation installer name directly if the field name is "insulation_installer_id"
     if (fieldName === "insulation_installer_id") {
       const installer = installers.find((inst) => inst.id === value);
@@ -256,31 +259,33 @@ const ViewJobs = () => {
       }
     }
 
-    // Calculate net profit based on provided formula
-    const absRateFloat = parseFloat(editedValues.abs_rate) || 0;
-    const absFieldFloat = parseFloat(editedValues.abs_field) || 0;
-    const labourCostFloat = parseFloat(editedValues.labour_cost) || 0;
-    const materialCostFloat = parseFloat(editedValues.material_cost) || 0;
-    const otherExpenseFloat = parseFloat(editedValues.other_expense) || 0;
+    // Calculate net profit based on provided formula using the latest state values
+    setEditedValues((prevState) => {
+      const absRateFloat = parseFloat(prevState.abs_rate) || 0;
+      const absFieldFloat = parseFloat(prevState.abs_field) || 0;
+      const labourCostFloat = parseFloat(prevState.labour_cost) || 0;
+      const materialCostFloat = parseFloat(prevState.material_cost) || 0;
+      const otherExpenseFloat = parseFloat(prevState.other_expense) || 0;
 
-    let calculatedNetProfit =
-      absRateFloat * absFieldFloat -
-      (labourCostFloat + materialCostFloat + otherExpenseFloat);
+      let calculatedNetProfit =
+        absRateFloat * absFieldFloat -
+        (labourCostFloat + materialCostFloat + otherExpenseFloat);
 
-    // If calculatedNetProfit is zero, set it to a small positive value
-    if (calculatedNetProfit === 0) {
-      calculatedNetProfit = Number.EPSILON;
-    }
+      // If calculatedNetProfit is zero, set it to a small positive value
+      if (calculatedNetProfit === 0) {
+        calculatedNetProfit = Number.EPSILON;
+      }
 
-    // Ensure the calculatedNetProfit is positive
-    calculatedNetProfit = Math.abs(calculatedNetProfit);
+      // Ensure the calculatedNetProfit is positive
+      calculatedNetProfit = calculatedNetProfit;
 
-    // Update the net profit field in editedValues
-    setEditedValues((prevState) => ({
-      ...prevState,
-      net_profit: calculatedNetProfit.toFixed(2), // Round to 2 decimal places
-    }));
+      return {
+        ...prevState,
+        net_profit: calculatedNetProfit.toFixed(2), // Round to 2 decimal places
+      };
+    });
   };
+
   const handleSearch = (e) => {
     setSearchKeyword(e.target.value);
     setCurrentPage(1); // Reset page to 1 when searching

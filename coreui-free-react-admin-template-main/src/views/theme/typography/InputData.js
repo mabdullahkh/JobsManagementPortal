@@ -141,7 +141,7 @@ const InputData = () => {
       }
 
       // Ensure the calculatedNetProfit is positive
-      calculatedNetProfit = Math.abs(calculatedNetProfit);
+      calculatedNetProfit = calculatedNetProfit;
       const response = await axios.post(`${BASE_URL}/ec04`, {
         jobname: jobName,
         job_status: selectedJobStatus,
